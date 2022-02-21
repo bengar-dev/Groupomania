@@ -1,6 +1,6 @@
 # Groupomania - Open Classrooms's School Project
 
-Final project before graduate, this is about a social network of Groupomania enterprise. ( MVP version )
+Final project before graduate, this is about a social network of Groupomania enterprise. *( MVP version )*
 
 # Rules
 
@@ -8,8 +8,9 @@ JavaScript must be use, front-end side we have to choose a framework & back-end 
 
 # Front side
 
-I choosed the library `React`, and `Tailwind CSS` for all style part of the project
-To handle React states, i choosed `Recoil JS`. For the API request i use `axios`. And for the security routes i choose `React Router`
+I choosed the library `React`, and `Tailwind CSS` for all style part of the project.
+
+To handle React states, i choosed `Recoil JS`. For the API request i use `axios`. And for the security routes i choose `React Router`.
 
 # Back side
 
