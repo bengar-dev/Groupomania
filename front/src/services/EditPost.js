@@ -16,14 +16,19 @@ export function editPost(textId, postid, img) {
         img: img
       }
     }
-    axios.put(api + '/api/post/' + postid, msgValue, {
-      headers: {'Authorization' : 'Bearer ' + userInfo.token}
-    })
-      .then(function (response){ // Récupération des données, et mis en state.
-        document.getElementById(textId).value = ''
-        console.log('ok')
+    if (!textValue && !img) {
+      return false
+    }
+    if (img || textValue !== '') {
+      axios.put(api + '/api/post/' + postid, msgValue, {
+        headers: {'Authorization' : 'Bearer ' + userInfo.token}
       })
-      .catch(function (error){
-        console.log(error)
-      })
+        .then(function (response){ // Récupération des données, et mis en state.
+          document.getElementById(textId).value = ''
+          console.log('ok')
+        })
+        .catch(function (error){
+          console.log(error)
+        })
+    }
   }

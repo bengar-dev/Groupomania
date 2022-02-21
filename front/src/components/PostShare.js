@@ -73,8 +73,8 @@ function PostShare() {
         {user.map(info =>
             <div key={info.id} className="w-full rounded-lg p-2 mt-2">
             <form className="flex flex-col">
-                <p className='font-medium text-sm'>Salut {info.firstname} , une pensée à partager ? 🙂</p>
-                <textarea className='mt-2 h-40 border rounded resize-none p-2 text-xs focus:outline-none' id="post" placeholder="What's up" value={contentPost} onChange={(e) => e.preventDefault(handleChange(e))}></textarea>
+                <p className='font-medium text-sm'>Hi {info.firstname} , what's up today ? 🙂</p>
+                <textarea className='mt-2 h-40 border rounded resize-none p-2 text-xs focus:outline-none' id="post" placeholder="Tell us about your day" value={contentPost} onChange={(e) => e.preventDefault(handleChange(e))}></textarea>
                 {imgtempoMsg ? <img className='mt-2 ml-auto mr-auto w-auto h-60 object-cover rounded-lg' src={imgtempoMsg} alt='image-post'/> : ''}
                 <div className="flex items-center mt-2">
                     <input type='file' className='w-0' id='img' accept='images/*' onChange={(e) => changeFile(e)}/>

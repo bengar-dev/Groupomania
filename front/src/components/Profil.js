@@ -26,7 +26,7 @@ function Profil() {
         </div>
         </div>
         )}
-        <button className='w-11/12 mb-2 flex justify-center items-center p-1 bg-gray-200 hover:bg-orange-400 rounded uppercase text-sm border border-gray-400 hover:border-orange-600 text-gray-800 hover:text-white hover:shadow' onClick={(e) => e.preventDefault(updateContenu(2))}>Edit my profil</button>
+        <button className='w-11/12 mb-2 flex justify-center items-center p-2 bg-gray-200 hover:bg-orange-400 rounded uppercase text-sm border border-gray-400 hover:border-orange-600 text-gray-800 hover:text-white hover:shadow' onClick={(e) => e.preventDefault(updateContenu(2))}>Edit my profil</button>
         </div>
   )
 }

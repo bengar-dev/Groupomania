@@ -1,6 +1,7 @@
 import Profil from '../components/Profil.js'
 import EditProfil from '../components/EditProfil.js'
 import Posts from '../components/Posts.js'
+import DelProfil from '../components/DelProfil.js'
 
 // Recoil Js
 import { useRecoilState } from 'recoil'
@@ -19,6 +20,9 @@ function Content() {
   }
   if(contenu === 0) {
     return <Posts />
+  }
+  if(contenu === 3) {
+    return <DelProfil />
   }
    else {
     return (

@@ -10,7 +10,7 @@ export function sendPost(content, postid, img) {
 
         const data = new FormData();
         data.append('id', postid);
-        data.append('content', content);
+        data.append('content', htmlEntities(content));
         data.append('date', Date.now());
         data.append('profilImg', img)
         data.append('userId', userInfo.userId);
