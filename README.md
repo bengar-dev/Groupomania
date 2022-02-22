@@ -2,8 +2,6 @@
 
 Final project before graduate, this is about a social network of Groupomania enterprise. *( MVP version )*
 
-demo : https://benoitgarcia.fr/ftp/demo_groupo.mkv
-
 # Rules
 
 JavaScript must be use, front-end side we have to choose a framework & back-end side we have to use SQL Databases.
