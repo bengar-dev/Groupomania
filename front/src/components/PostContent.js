@@ -125,7 +125,7 @@ function PostsContent() {
       } // si on appelle pas edit, on retourne simplement le msg du post
       return (
         <div className='flex flex-col mb-2'>
-           {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg' src={img} alt='image'/></div> : ''}
+           {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg' src={img} alt={'image publication ' + postid}/></div> : ''}
            <p className='bg-slate-50 p-4 text-gray-800 font-light text-sm rounded'>{htmlEntities(msg)}</p>
         </div>
       )
@@ -135,14 +135,14 @@ function PostsContent() {
     function postActions(postuserid, postid, msg, postimg) {
         if(postuserid === userToken.userId) { // affichage des options edit / delete quand le post appartient à l'utilisateur
           return <div className='flex ml-auto mr-0 justify-between w-20'>
-          <button className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-8 h-8 rounded-lg' onClick={(e) => e.preventDefault(handleEdit(postid), updateImgPrev(postimg))}><i className='fas fa-pen'></i></button>
-          <button className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(splicePost(postid), deletePost(postid))}><i className='fas fa-trash'></i></button>
+          <button aria-label="Edit Publication" title="Edit Publication" type='button' className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-8 h-8 rounded-lg' onClick={(e) => e.preventDefault(handleEdit(postid), updateImgPrev(postimg))}><i className='fas fa-pen'></i></button>
+          <button aria-label="Delete Publication" title="Delete Publication" type='button' className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(splicePost(postid), deletePost(postid))}><i className='fas fa-trash'></i></button>
           </div>
         }
         if(userToken.admin === 1) { // affichage des options delete quand l'utilisateur est admin
           return (
             <div className='flex ml-auto mr-0 flex-row-reverse w-20 '>
-            <button className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(splicePost(postid), deletePost(postid))}><i className='fas fa-trash'></i></button>
+            <button aria-label="Delete Publication" title="Delete Publication" type='button' className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(splicePost(postid), deletePost(postid))}><i className='fas fa-trash'></i></button>
             </div>
           )
         }
@@ -190,10 +190,11 @@ function PostsContent() {
               msg: commentsVal
             })
             var textId= 'text-' + cmtid
-            return ( <div className='flex flex-col md:flex-row'>
+            return ( <form className='flex flex-col md:flex-row'>
+            <label htmlFor={textId}></label>
             <input type='text' className='w-full bg-gray-50 border text-gray-800 text-xs h-10 md:h-6 p-2 rounded focus:outline-none focus:bg-gray-100' id={textId} value={commentsVal ? commentsVal : msg} onChange={(e) => updateValueCmts(e.target.value)}/>
             <button className='ml-0 mt-1 md:mt-0 md:ml-1 bg-emerald-100 border border-emerald-400 w-full h-10 md:h-auto md:w-12 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(updateEditCmt(0), updateComments(newCmt), editCmt(textId, cmtid))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button>
-            </div>
+            </form>
           )
         }
         return <p className=''>{htmlEntities(msg)}</p>
@@ -202,10 +203,10 @@ function PostsContent() {
        //Affichage Comment Actions ( Edit / Delete )
       function cmtActions(userid, cmtuserid, cmtid) {
         if(userid === cmtuserid) {
-          return <div className='mr-0 ml-auto'><button className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-6 h-6 rounded-lg text-sm' onClick={(e) => e.preventDefault(handleEditCmt(cmtid))}><i className='fas fa-pen'/></button> <button className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(spliceCmt(cmtid), deleteCmt(cmtid))}><i className='fas fa-trash'/></button></div>
+          return <div className='mr-0 ml-auto'><button aria-label="Edit Comment" title="Edit Comment" type='button'  className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-6 h-6 rounded-lg text-sm' onClick={(e) => e.preventDefault(handleEditCmt(cmtid))}><i className='fas fa-pen'/></button> <button aria-label="Delete Comment" title="Delete Comment" type='button'  className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(spliceCmt(cmtid), deleteCmt(cmtid))}><i className='fas fa-trash'/></button></div>
         }
         if(userToken.admin === 1) {
-          return <div className='mr-0 ml-auto'><button className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(spliceCmt(cmtid), deleteCmt(cmtid))}><i className='fas fa-trash'/></button></div>
+          return <div className='mr-0 ml-auto'><button aria-label="Delete Comment" title="Delete Comment" type='button'  className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(spliceCmt(cmtid), deleteCmt(cmtid))}><i className='fas fa-trash'/></button></div>
         }
       }
 
@@ -231,9 +232,9 @@ function PostsContent() {
           userLike: JSON.stringify(userLike)
         })
         if (foundUser > -1) { //L'utilisateur a déjà like le post
-          return <button className='transition-all ml-1 mb-2 text-xs bg-red-200 border border-red-600 text-red-600 rounded p-1 hover:bg-gray-200 hover:text-gray-600 hover:border-gray-600' onClick={(e) => e.preventDefault(updatePosts(newDislike), likePost(postid, 0))}><i className="fas fa-heart-broken"></i> Unlike</button>
+          return <button aria-label="Dislike Publication" title="Dislike Publication" type='button' className='transition-all ml-1 mb-2 text-xs bg-red-200 border border-red-600 text-red-800 rounded p-1 hover:bg-gray-200 hover:text-gray-600 hover:border-gray-600' onClick={(e) => e.preventDefault(updatePosts(newDislike), likePost(postid, 0))}><i className="fas fa-heart-broken"></i> Unlike</button>
         } else { //L'utilisateur n'a pas like le post
-          return <button className='transition-all ml-1 mb-2 text-xs bg-gray-200 border border-gray-600 text-gray-600 rounded p-1 hover:bg-red-200 hover:text-red-600 hover:border-red-600' onClick={(e) => e.preventDefault(updatePosts(newLike), likePost(postid, 1))}><i className="fas fa-heart"></i> Like</button>
+          return <button aria-label="Like Publication" title="Like Publication" type='button' className='transition-all ml-1 mb-2 text-xs bg-gray-200 border border-gray-600 text-gray-600 rounded p-1 hover:bg-red-200 hover:text-red-600 hover:border-red-600' onClick={(e) => e.preventDefault(updatePosts(newLike), likePost(postid, 1))}><i className="fas fa-heart"></i> Like</button>
         }
       }
     }
@@ -243,28 +244,28 @@ function PostsContent() {
    {posts.map(post =>
            post.postId ? <div key={post.postId} className='w-11/12 bg-slate-100 flex flex-col mt-4 p-1 rounded'>
            <div className='flex w-full items-center p-1'>
-             <img className='h-10 w-10 object-cover rounded-full' src={post.userId === userToken.userId ? (avatarPreview === '' ? post.avatar : avatarPreview) : post.avatar} alt={post.firstname}/>
+             <img className='h-10 w-10 object-cover rounded-full' src={post.userId === userToken.userId ? (avatarPreview === '' ? post.avatar : avatarPreview) : post.avatar} alt={'avatar ' + post.firstname}/>
              <div className='flex flex-col ml-2'>
              <h1 className='font-medium'>{post.userId === userToken.userId ? (firstname === '' ? post.firstname : firstname) : post.firstname} {post.userId === userToken.userId ? (lastname === '' ? post.lastname : lastname) : post.lastname}</h1>
-             <p className='text-xs'>{moment(post.postedat).calendar()}</p>
+             <p className='text-xs'>{moment(post.postedat).format('LLL')}</p>
              </div>
              {postActions(post.userId, post.postId, post.msg, post.img)}
            </div>
            <div className='post-content'>
            <p className='text-center text-xs font-medium text-red-500'>{alert}</p>
            {showEdit(post.msg, post.img, post.postId, post.userId, userToken.userId)}
-             {post.countLike ? <div className='ml-2 flex items-center justify-between w-8 h-8 mb-2 text-red-600 rounded text-sm'><i className="fas fa-heart"></i> <p>{post.countLike}</p></div> : <div className='ml-2 flex items-center w-8 mb-2 text-red-600 rounded text-sm h-8'><i className="fas fa-heart"></i></div>}
+             {post.countLike ? <div className='ml-2 flex items-center justify-between w-8 h-8 mb-2 text-red-800 rounded text-sm'><i className="fas fa-heart"></i> <p>{post.countLike}</p></div> : <div className='ml-2 flex items-center w-8 mb-2 text-red-800 rounded text-sm h-8'><i className="fas fa-heart"></i></div>}
              <div className='post-sep-line'></div>
             {handleLikes(post.postId, userToken.userId, post.userLike)}
            </div>
            <div className='flex flex-col'>
-             <div className='flex flex-col md:flex-row'><input className='w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id={post.postId + '-cmt'} type='text' onChange={(e) => e.preventDefault(updateValueCmts(e.target.value))} placeholder='Comment here' /> <button className='ml-1 bg-emerald-100 border border-emerald-400 mt-1 md:mt-0 h-10 md:h-auto md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(verifCmt(post.postId))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button></div>
+             <form className='flex flex-col md:flex-row'><label htmlFor={post.postId + '-cmt'} title='Input comment'></label><input name={post.postId + '-cmt'} className='w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id={post.postId + '-cmt'} type='text' onChange={(e) => e.preventDefault(updateValueCmts(e.target.value))} placeholder='Comment here' /> <button aria-label="Post comment" title="Post comment" type='button' className='ml-1 bg-emerald-100 border border-emerald-400 mt-1 md:mt-0 h-10 md:h-auto md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(verifCmt(post.postId))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button></form>
               <div className='flex flex-col'>
                 {comments.map(cmt => (cmt.postId === post.postId) ? <div className='border-l-4 border-red-300 mt-2' key={cmt.cmtId}>
                   <div className='flex p-2 bg-slate-50'>
-                    <img className='h-8 w-8 rounded-full object-cover' src={cmt.userId === userToken.userId ? (avatarPreview === '' ? cmt.avatar : avatarPreview) : cmt.avatar} alt='avatar' />
+                    <img className='h-8 w-8 rounded-full object-cover' src={cmt.userId === userToken.userId ? (avatarPreview === '' ? cmt.avatar : avatarPreview) : cmt.avatar} alt={'avatar ' + cmt.firstname} />
                     <div className='ml-2 flex flex-col'>
-                      <h3 className='text-sm font-medium'>{cmt.userId === userToken.userId ? (firstname === '' ? cmt.firstname : firstname) : cmt.firstname} {cmt.userId === userToken.userId ? (lastname === '' ? cmt.lastname : lastname) : cmt.lastname}</h3>
+                      <h1 className='text-sm font-medium'>{cmt.userId === userToken.userId ? (firstname === '' ? cmt.firstname : firstname) : cmt.firstname} {cmt.userId === userToken.userId ? (lastname === '' ? cmt.lastname : lastname) : cmt.lastname}</h1>
                       <p className='text-xs'>{moment(cmt.cmtdate).calendar()}</p>
                     </div>
                     {cmtActions(userToken.userId, cmt.userId, cmt.cmtId)}

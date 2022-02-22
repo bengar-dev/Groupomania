@@ -1,3 +1,5 @@
+import { Link, useNavigate } from 'react-router-dom'
+
 import { deleteUser } from '../services/DeleteUser.js'
 
 import { useRecoilState } from 'recoil'
@@ -23,20 +25,20 @@ function DelProfil() {
     const [posts, upposts] = useRecoilState(displayPosts)
     const [cmts, upcmts] = useRecoilState(displayCmts)
     const [cmtsVal, upcmtsVal] = useRecoilState(cmtsValue)
+    const navigate = useNavigate();
 
+    const redirect = () => setTimeout(navigate('/'), 2000)
 
     // fonction async
     async function repDel(pass) {
       const res = await deleteUser(pass)
       if(!res) {
         console.log(res)
-
       } else {
         updatePass('')
         localStorage.removeItem('info')
         updateAuth(0)
         updateUser([])
-        updateContenu(0)
         updatealrtMsg('')
         upfirst('')
         uplast('')
@@ -45,6 +47,8 @@ function DelProfil() {
         upposts([])
         upcmts([])
         upcmtsVal('')
+        navigate('/')
+        window.location.reload(false);
       }
     }
 
@@ -57,7 +61,7 @@ function DelProfil() {
           <input className='mt-2 w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' type='password' id='passconfirm_del' name='passconfirm_del' value={pass} onChange={(e) => updatePass(e.target.value)}/>
           <div className="w-full flex flex-row-reverse">
             <button type='submit' className='md:ml-0 md:mr-0 md:mt-2 p-2 bg-emerald-100 border border-emerald-400 w-11/12 md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(repDel(pass))}><i className='fas fa-check' /></button>
-            <button className='mt-2 md:mt-2 mr-0 md:mr-1 p-2 bg-orange-100 border border-orange-400 w-11/12 md:w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' onClick={(e) => e.preventDefault(updateContenu(2))}><i className="fas fa-arrow-circle-left"></i></button>
+            <button className='mt-2 md:mt-2 mr-0 md:mr-1 p-2 bg-orange-100 border border-orange-400 w-11/12 md:w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' onClick={(e) => e.preventDefault(navigate('/edit-profil'))}><i className="fas fa-arrow-circle-left"></i></button>
           </div>
         </form>
       </div>

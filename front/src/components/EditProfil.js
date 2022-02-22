@@ -1,3 +1,5 @@
+import { Link, useNavigate } from 'react-router-dom'
+
 //function
 import { editUser } from '../services/EditUser'
 
@@ -17,6 +19,7 @@ function EditProfil() {
   const [ avatar, updateAvatar ] = useRecoilState(avatarValue)
   const [ avatarPreview, updateAvatarPreview ] = useRecoilState(avatarPrev)
   const [ alertmsg, updateAlertmsg] = useRecoilState(alertMsg)
+  const navigate = useNavigate();
 
 
   // fonction verification
@@ -83,9 +86,9 @@ function EditProfil() {
           <input type='email' className='ml-2 mr-2 bg-gray-200 border text-gray-800 text-xs w-auto h-10 p-2 rounded focus:outline-none' id='email' name='email' value={info.email} readOnly/>
           <div className="flex flex-col md:flex-row md:flex-row-reverse items-center mt-4">
             <button type='submit' className='md:ml-0 md:mr-2 p-2 bg-emerald-100 border border-emerald-400 w-11/12 md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(verifEditUser(info.firstname, info.lastname, info.id, info.admin, info.email, info.avatar))}><i className='fas fa-check' /></button>
-            <button className='mt-2 md:mt-0 mr-0 md:mr-1 p-2 bg-orange-100 border border-orange-400 w-11/12 md:w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' onClick={(e) => e.preventDefault(updateContenu(1), updateAlertmsg(''))}><i className="fas fa-arrow-circle-left"></i></button>
+            <button onClick={(e) => e.preventDefault(updateAlertmsg(''), navigate('/profil'))} className='mt-2 md:mt-0 mr-0 md:mr-1 p-2 bg-orange-100 border border-orange-400 w-11/12 md:w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white'><i className="fas fa-arrow-circle-left"></i></button>
           </div>
-          <button className='ml-auto mb-2 mr-auto w-11/12 md:w-auto mt-6 md:m-2 p-2 bg-gray-200 hover:bg-red-400 rounded uppercase text-sm border border-gray-400 hover:border-red-600 text-gray-800 hover:text-white hover:shadow' onClick={(e) => e.preventDefault(updateContenu(3))}>Delete my account</button>
+          <button className='ml-auto mb-2 mr-auto w-11/12 md:w-auto mt-6 md:m-2 p-2 bg-gray-200 hover:bg-red-400 rounded uppercase text-sm border border-gray-400 hover:border-red-600 text-gray-800 hover:text-white hover:shadow' onClick={(e) => e.preventDefault(navigate('/delete-profil'))}>Delete my account</button>
         </form>
       </div>
         )}

@@ -1,3 +1,5 @@
+import { Link, useNavigate } from 'react-router-dom'
+
 import logo from '../assets/logo_height.png'
 
 import {validMail} from '../functions/verifMail.js'
@@ -5,11 +7,11 @@ import {validPass} from '../functions/verifPass.js'
 import {getRegister} from '../services/Register.js'
 
 import { useRecoilState } from 'recoil'
-import { formState, msgForm, emailValue, firstnameValue, lastnameValue, passwordValue, passState } from '../atoms/form.js'
+import { msgForm, emailValue, firstnameValue, lastnameValue, passwordValue, passState } from '../atoms/form.js'
 
 function Register() {
 
-    const [form, updateForm] = useRecoilState(formState)
+    const navigate = useNavigate();
     const [msg, updateMsg] = useRecoilState(msgForm)
     const [email, updateMail] = useRecoilState(emailValue)
     const [pass, updatePass] = useRecoilState(passwordValue)
@@ -45,6 +47,18 @@ function Register() {
     }
 
     function verifRegister(e) {
+
+      async function repRegister() { // fonction async pour verif le login
+      const result = await getRegister(email, pass, first, last)
+      if(!result) {
+        updateMsg('Error : Email already exist')
+      } else {
+        updateMsg('You has been registered')
+        updatePwstate(0)
+        navigate('/')
+      }
+    }
+
       if (email === '' || first === '' || last === '' || pass === '') {
         updateMsg('All fields must be filled')
         return false
@@ -54,17 +68,14 @@ function Register() {
         return false
       }
       if (msg === '') {
-        e.preventDefault(getRegister(email, pass, first, last))
-        updateMsg('You has been registered')
-        updateForm(0)
-        updatePwstate(0)
+        repRegister()
         return true
       }
       return false
     }
 
     return (
-        <div className='container mx-auto bg-white flex flex-col min-w-min max-w-screen-sm h-fit items-center rounded-lg mt-10 shadow-lg'>
+        <main className='container mx-auto bg-white flex flex-col min-w-min max-w-screen-sm h-fit items-center rounded-lg mt-10 shadow-lg'>
             <img className='mt-2 w-auto h-40 object-contain' src={logo} alt='Logo Groupomania'/>
             <p className='mt-2 text-xs font-medium text-red-500 h-6'>{msg}</p>
             <label htmlFor='login' className='ml-8 mr-auto text-sm text-gray-800 font-medium'>Email</label>
@@ -80,8 +91,8 @@ function Register() {
             </div>
             <button type='submit' className='w-11/12 bg-gray-900 m-6 h-10 rounded-lg text-gray-50 text-sm font-medium hover:bg-emerald-300 hover:text-emerald-800 hover:shadow-sm' onClick={(e) => e.preventDefault(verifRegister(e))}>Register</button>
             <div className='h-px bg-gray-100 w-11/12' />
-            <p className='m-4 text-sm font-medium'>Already register ? Let's <a href='#' className='text-red-400 hover:text-red-600' onClick={(e) => e.preventDefault(updateForm(0))}>Sign In</a></p>
-        </div>
+            <p className='m-4 text-sm font-medium'>Already register ? Let's <Link to='/'><button className='font-medium text-red-600 hover:text-red-400'>Sign In</button></Link></p>
+        </main>
     )
 }
 

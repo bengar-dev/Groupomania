@@ -6,35 +6,23 @@ import { authState } from '../atoms/auth.js'
 import SignIn from '../pages/Signin.js'
 import Forum from '../pages/Forum.js'
 
+import { Routes, Route, Link } from "react-router-dom";
+
 function Auth() {
 
   const [auth, updateAuth] = useRecoilState(authState)
 
-  const axios = require('axios').default;
-  const userInfo = JSON.parse(localStorage.getItem('info'))
-  // si token présent en localStorage..
-  if (userInfo) {
-    axios.get(api + '/api/user/' + userInfo.userId, {
-      headers: {'Authorization' : 'Bearer ' + userInfo.token}
-    })
-      .then(function (response){
-        updateAuth(1)
-      })
-      .catch(function (error){
-        localStorage.removeItem('info')
-        updateAuth(0)
-      })
-  }
-  //vérification si on est auth ou non.
-  if(auth === 0) {
-    return (
-      <SignIn />
-    )
-  } else {
-    return (
-      <Forum />
-    )
-  }
+  const isAuth = () => localStorage.getItem("info") != null
+
+  return (
+      isAuth() ?
+        <Forum />
+      : <SignIn />
+  )
 }
 
 export default Auth
+
+/* <Routes>
+  {auth === 0 ? <Route path="/" element={<SignIn />} /> : <Route path="/forum" element={<Forum />} />}
+</Routes> */

@@ -13,12 +13,12 @@ export function getRegister(email, pass, firstname, lastname) {
         lastname: lastname
       }
       // requete post sur notre API
-      axios.post(api + '/api/user/signup', user)
+      return axios.post(api + '/api/user/signup', user)
         .then(function (response) {
-            return response
+          return true
         })
         .catch(function (error){
-          return error
+          return false
         })
 
 }

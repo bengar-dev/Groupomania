@@ -46,21 +46,30 @@ exports.signup = (req, res, next) => {
     if(!validateEmail(req.body.email)) {
         return res.status(401).json({message: 'Email non valide'});
     }
-    // bcrypt js
-    bcrypt.hash(req.body.password, 10)
-        .then(
-            hash => {
-                var sql = `INSERT INTO users (email, password, firstname, lastname) VALUES ('${req.body.email}', '${hash}', '${req.body.firstname}', '${req.body.lastname}')`;
-                con.query(sql, function(err, rows, field) {
-                    if(err) {
-                        return res.status(401).json({err});
-                    } else {
-                        return res.status(200).json({message: 'Utilisateur ajouté'});
-                    }
-                });
-            }
-        )
-        .catch(error => res.status(500).json({error}));
+    var sql = `SELECT * FROM users WHERE email = '${req.body.email}'`
+    con.query(sql, function(err, rows, filed) {
+      if (err) throw err;
+      if (rows.length !== 0) {
+        return res.status(401).json({message: 'Email déjà existant'})
+      }
+      else {
+        // bcrypt js
+        bcrypt.hash(req.body.password, 10)
+            .then(
+                hash => {
+                    var sql = `INSERT INTO users (email, password, firstname, lastname) VALUES ('${req.body.email}', '${hash}', '${req.body.firstname}', '${req.body.lastname}')`;
+                    con.query(sql, function(err, rows, field) {
+                        if(err) {
+                            return res.status(401).json({err});
+                        } else {
+                            return res.status(200).json({message: 'Utilisateur ajouté'});
+                        }
+                    });
+                }
+            )
+            .catch(error => res.status(500).json({error}));
+      }
+    })
 }
 
 exports.login = (req, res, next) => {

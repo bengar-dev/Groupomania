@@ -2,6 +2,7 @@ const express = require('express');
 var mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const sanitizer = require('sanitizer')
 
 const con = mysql.createConnection({
   host: "localhost",
@@ -36,11 +37,11 @@ exports.getOne = (req, res, next) => {
 
 exports.postOne = (req, res, next) => {
   var userId = req.body.userId
-  var content = req.body.content
+  var content = sanitizer.escape(req.body.content)
   var date = new Date()
   if(req.file) {
     var imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    var sql = `INSERT INTO posts (id, userId, msg, img, postedat) VALUES ('${req.body.id}','${req.body.userId}', '${req.body.content}', '${imgUrl}', NOW())`;
+    var sql = `INSERT INTO posts (id, userId, msg, img, postedat) VALUES ('${req.body.id}','${req.body.userId}', '${content}', '${imgUrl}', NOW())`;
     con.query(sql, function(error, rows, filed) {
     if(error) {
       return res.status(401).json({error})
@@ -49,7 +50,7 @@ exports.postOne = (req, res, next) => {
     }
   })
   } else {
-    var sql = `INSERT INTO posts (id, userId, msg, postedat) VALUES ('${req.body.id}','${req.body.userId}', '${req.body.content}', NOW())`;
+    var sql = `INSERT INTO posts (id, userId, msg, postedat) VALUES ('${req.body.id}','${req.body.userId}', '${content}', NOW())`;
     con.query(sql, function(error, rows, filed) {
     if(error) {
       return res.status(401).json({error})
@@ -61,6 +62,7 @@ exports.postOne = (req, res, next) => {
 }
 
 exports.editOne = (req, res, next) => {
+  var content = sanitizer.escape(req.body.msg)
   var sql = `SELECT * FROM posts WHERE id = '${req.params.id}'`
   con.query(sql, function(error, rows, filed){
     if(error) throw error;
@@ -78,7 +80,7 @@ exports.editOne = (req, res, next) => {
     if (filename) {
       filename = rows[0].img.split('/images/')[1];
     }
-    var sql = `UPDATE posts SET msg = '${req.body.msg}', img = '${req.body.img}' WHERE id = '${req.params.id}'`;
+    var sql = `UPDATE posts SET msg = '${content}', img = '${req.body.img}' WHERE id = '${req.params.id}'`;
     con.query(sql, function(error, rows, filed){
       if(error) throw error;
       if (filename) {
@@ -94,6 +96,7 @@ exports.editOne = (req, res, next) => {
 
 
 exports.editCmt = (req, res, next) => {
+  var content = sanitizer.escape(req.body.msg)
   var sql = `SELECT * FROM cmt WHERE id = '${req.params.id}'`
   con.query(sql, function (error, rows, filed) {
     if(error) throw error
@@ -108,7 +111,7 @@ exports.editCmt = (req, res, next) => {
       return res.status(401).json({message : 'Non autorisé'})
     }
     else {
-      var sql = `UPDATE cmt SET msg = '${req.body.msg}' WHERE id = '${req.params.id}'`
+      var sql = `UPDATE cmt SET msg = '${content}' WHERE id = '${req.params.id}'`
       con.query(sql, function(error, rows, filed) {
         if(error) throw error
         return res.status(200).json({message: 'Commentaire mis à jour'})
@@ -165,7 +168,8 @@ exports.deleteOne = (req, res, next) => {
 }
 
 exports.postCmt = (req, res, next) => {
-  var sql = `INSERT INTO cmt (id, postId, userId, msg, cmtdate) VALUES ('${req.body.id}', '${req.params.id}', '${req.body.userId}', '${req.body.msg}', NOW())`;
+  var content = sanitizer.escape(req.body.msg)
+  var sql = `INSERT INTO cmt (id, postId, userId, msg, cmtdate) VALUES ('${req.body.id}', '${req.params.id}', '${req.body.userId}', '${content}', NOW())`;
   con.query(sql, function(error, rows, filed) {
     if(error) {
       return res.status(400).json({error})

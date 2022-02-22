@@ -1,3 +1,5 @@
+import { Link, useNavigate } from 'react-router-dom'
+
 //Recoil JS
 import { useRecoilState } from 'recoil'
 import { authState } from '../atoms/auth.js'
@@ -20,6 +22,7 @@ function Logout() {
     const [posts, upposts] = useRecoilState(displayPosts)
     const [cmts, upcmts] = useRecoilState(displayCmts)
     const [cmtsVal, upcmtsVal] = useRecoilState(cmtsValue)
+    const navigate = useNavigate();
 
     function Reset() {
         localStorage.removeItem('info')
@@ -34,10 +37,12 @@ function Logout() {
         upposts([])
         upcmts([])
         upcmtsVal('')
+        navigate('/')
+        window.location.reload(false);
     }
 
   return (
-    <button className='text-gray-50 hover:text-red-200' onClick={Reset}>
+    <button aria-label="Logout" title="Logout" type='button' className='text-gray-50 hover:text-red-200' onClick={Reset}>
       <i className='fas fa-sign-out-alt'></i>
     </button>
   )

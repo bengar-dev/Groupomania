@@ -2,17 +2,21 @@ import { api } from "../config/config"
 
 export function editPost(textId, postid, img) {
 
+  function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&qut;');
+    }
+
     const userInfo = JSON.parse(localStorage.getItem('info'))
     const axios = require('axios').default;
     console.log(img)
     let textValue = document.getElementById(textId).value
     let msgValue = {
-      msg: textValue,
+      msg: htmlEntities(textValue),
       img: ''
     }
     if (img) {
       let msgValue = {
-        msg: textValue,
+        msg: htmlEntities(textValue),
         img: img
       }
     }

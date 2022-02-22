@@ -12,8 +12,7 @@ export function getLogin(email, password) {
      return axios.post(api + '/api/user/login', user)
         .then(function (response){
           //stockage en localStorage de l'id & token
-          localStorage.setItem('info', JSON.stringify(response.data))
-          return true
+          return response.data
         })
         .catch(function (error){
             console.log(error)
