@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import logo from '../assets/logo_height.png'
 
@@ -17,6 +17,7 @@ function Login() {
     const [email, updateMail] = useRecoilState(emailValue)
     const [pass, updatePass] = useRecoilState(passwordValue)
     const [auth, updateAuth] = useRecoilState(authState)
+    const navigate = useNavigate()
 
     function verifLogin(e) {
       if (email === '' || pass === '') {
@@ -29,6 +30,7 @@ function Login() {
         updateAuth(0)
       } else {
         localStorage.setItem('info', JSON.stringify(result))
+        navigate('/')
         window.location.reload(false);
         updateMsg('')
         updateMail('')

@@ -14,7 +14,7 @@ import { randomInt } from '../functions/randomInt'
 
 import { useRecoilState} from 'recoil'
 import { alertMsg } from '../atoms/alertmsg.js'
-import { displayPosts, displayCmts, cmtsValue, editState, msgValue, cmtState, imgTemp } from '../atoms/posts.js'
+import { displayPosts, displayCmts, cmtsValue, editState, msgValue, cmtState, imgTemp, imgValue } from '../atoms/posts.js'
 import { userInfo } from '../atoms/userinfo.js'
 import { firstnameValue, lastnameValue, avatarPrev } from '../atoms/edituser.js'
 
@@ -30,6 +30,7 @@ function PostsContent() {
     const [ editcmt, updateEditCmt ] = useRecoilState(cmtState)
     const [ firstname ] = useRecoilState(firstnameValue)
     const [ lastname ] = useRecoilState(lastnameValue)
+    const [ imgVal, updateImg ] = useRecoilState(imgValue)
     const [ imgPrev, updateImgPrev ] = useRecoilState(imgTemp)
     const [ avatarPreview ] = useRecoilState(avatarPrev)
     const [ editpst, updateEditPost ] = useRecoilState(editState)
@@ -95,6 +96,30 @@ function PostsContent() {
       } else { updateEditCmt(0) }
     }
 
+    //function confirm delete
+    function confirmDelPost(postid) {
+      if (window.confirm('Are you sur to delete this publication ?')) {
+        splicePost(postid)
+        deletePost(postid)
+      }
+    }
+
+    function confirmDelCmt(cmtid) {
+      if(window.confirm('Are you sure to delete this comment ?')) {
+        spliceCmt(cmtid)
+        deleteCmt(cmtid)
+      }
+    }
+
+    function changeFile(e) {
+      const reader = new FileReader() // Utilisation de FileReader pour réaliser une preview image.
+      reader.onloadend = () => {
+          updateImgPrev(reader.result) // stockage du résultat FileReader dans un state image Preview
+      }
+      reader.readAsDataURL(e.target.files[0])
+      updateImg(e.target.files[0]) // stockage du fichier charger dans un state Image
+  }
+
     //display Edit Post
     function showEdit(msg, img, postid, postuserid, userid) {
       if (editpst === postid && postuserid === userid) { // vérification utilisateur + ciblage du Post.
@@ -103,11 +128,11 @@ function PostsContent() {
           const postObject = posts[findIndex] // déclaration de l'objet postObject
           const newPost = replaceItemAtIndex(posts, findIndex, { // constante newPost appelé en cas d'édition
             ...postObject,
-            msg: msgVal,
+            msg: (msgVal ? msgVal : msg),
             img: imgPrev
           })
           function handleNewpost() {
-            if(!msgVal && !imgPrev) {
+            if(!msgVal && !imgPrev && !msg) {
               updateAlert(`Warning, a publication can't be empty`)
               return false
             }
@@ -117,9 +142,12 @@ function PostsContent() {
           }
           // affichage du Edit Post
           return ( <div className='flex flex-col bg-slate-50 items-center p-4'>
-            {imgPrev ? <div><img className='w-auto h-60 object-cover rounded-lg shadow' src={imgPrev} alt='image post' /><button className='relative bottom-60 w-full bg-slate-600/40 hover:bg-slate-600 rounded-lg text-white p-1' onClick={(e) => e.preventDefault(updateImgPrev(null))}><i className="fas fa-trash" aria-hidden="true"></i></button></div> : ''}
-          <textarea className='w-full resize-none h-40 text-xs p-2 focus:outline-none rounded-lg border' id={textId} value={msgVal ? msgVal : updateMsgVal(msg)} onChange={(e) => updateMsgVal(e.target.value)}></textarea>
-          <button className='mt-2 p-2 bg-emerald-100 border border-emerald-400 w-full text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(editPost(textId, postid, imgPrev), updateEditPost(0), handleNewpost(), updateMsgVal(''), updateImgPrev(''))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button>
+            {imgPrev ? <div><img className='w-auto h-60 object-cover rounded-lg shadow' src={imgPrev} alt='image post' /><button className='relative bottom-60 w-full bg-red-600/40 hover:bg-red-600 rounded-lg text-white p-1' onClick={(e) => e.preventDefault(updateImgPrev(null))}><i className="fas fa-trash" aria-hidden="true"></i></button>
+            </div> : ''}
+            <label htmlFor='edit-img' className='w-3/12 bg-orange-200 border border-orange-600 hover:bg-orange-600 rounded-lg text-orange-600 hover:text-white text-center flex items-center justify-around' aria-hidden="true"><i className="fas fa-images"></i> <p className='font-medium text-sm'>Edit image</p>
+            <input type='file' className='w-0' id='edit-img' accept='images/*' onChange={(e) => changeFile(e)}/></label>
+          <textarea className='w-full mt-2 resize-none h-40 text-xs p-2 focus:outline-none rounded-lg border' id={textId} value={msgVal ? msgVal : ''} placeholder={msg} onChange={(e) => updateMsgVal(e.target.value)}></textarea>
+          <button className='mt-2 p-2 bg-emerald-100 border border-emerald-400 w-full text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(editPost(textId, postid, imgPrev, imgVal, msgVal, msg), updateEditPost(0), handleNewpost(), updateMsgVal(''), updateImgPrev(''))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button>
           </div>
         )
       } // si on appelle pas edit, on retourne simplement le msg du post
@@ -132,17 +160,17 @@ function PostsContent() {
     }
 
     //Affichage Post Actions ( Edit / Delete )
-    function postActions(postuserid, postid, msg, postimg) {
+    function postActions(postuserid, postid, msg, postimg) {//splicePost(postid), deletePost(postid), 
         if(postuserid === userToken.userId) { // affichage des options edit / delete quand le post appartient à l'utilisateur
           return <div className='flex ml-auto mr-0 justify-between w-20'>
           <button aria-label="Edit Publication" title="Edit Publication" type='button' className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-8 h-8 rounded-lg' onClick={(e) => e.preventDefault(handleEdit(postid), updateImgPrev(postimg))}><i className='fas fa-pen'></i></button>
-          <button aria-label="Delete Publication" title="Delete Publication" type='button' className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(splicePost(postid), deletePost(postid))}><i className='fas fa-trash'></i></button>
+          <button aria-label="Delete Publication" title="Delete Publication" type='button' className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(confirmDelPost(postid))}><i className='fas fa-trash'></i></button>
           </div>
         }
         if(userToken.admin === 1) { // affichage des options delete quand l'utilisateur est admin
           return (
             <div className='flex ml-auto mr-0 flex-row-reverse w-20 '>
-            <button aria-label="Delete Publication" title="Delete Publication" type='button' className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(splicePost(postid), deletePost(postid))}><i className='fas fa-trash'></i></button>
+            <button aria-label="Delete Publication" title="Delete Publication" type='button' className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-8 h-8' onClick={(e) => e.preventDefault(confirmDelPost(postid))}><i className='fas fa-trash'></i></button>
             </div>
           )
         }
@@ -203,10 +231,10 @@ function PostsContent() {
        //Affichage Comment Actions ( Edit / Delete )
       function cmtActions(userid, cmtuserid, cmtid) {
         if(userid === cmtuserid) {
-          return <div className='mr-0 ml-auto'><button aria-label="Edit Comment" title="Edit Comment" type='button'  className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-6 h-6 rounded-lg text-sm' onClick={(e) => e.preventDefault(handleEditCmt(cmtid))}><i className='fas fa-pen'/></button> <button aria-label="Delete Comment" title="Delete Comment" type='button'  className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(spliceCmt(cmtid), deleteCmt(cmtid))}><i className='fas fa-trash'/></button></div>
+          return <div className='mr-0 ml-auto'><button aria-label="Edit Comment" title="Edit Comment" type='button'  className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-6 h-6 rounded-lg text-sm' onClick={(e) => e.preventDefault(handleEditCmt(cmtid))}><i className='fas fa-pen'/></button> <button aria-label="Delete Comment" title="Delete Comment" type='button'  className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(confirmDelCmt(cmtid))}><i className='fas fa-trash'/></button></div>
         }
         if(userToken.admin === 1) {
-          return <div className='mr-0 ml-auto'><button aria-label="Delete Comment" title="Delete Comment" type='button'  className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(spliceCmt(cmtid), deleteCmt(cmtid))}><i className='fas fa-trash'/></button></div>
+          return <div className='mr-0 ml-auto'><button aria-label="Delete Comment" title="Delete Comment" type='button'  className='bg-red-100 border border-red-500 text-red-700 hover:bg-red-500 hover:text-white rounded-lg w-6 h-6 text-sm' onClick={(e) => e.preventDefault(confirmDelCmt(cmtid))}><i className='fas fa-trash'/></button></div>
         }
       }
 

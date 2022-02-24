@@ -64,6 +64,10 @@ exports.postOne = (req, res, next) => {
 exports.editOne = (req, res, next) => {
   var content = sanitizer.escape(req.body.msg)
   var sql = `SELECT * FROM posts WHERE id = '${req.params.id}'`
+  var imgPost = ''
+  if (req.body.img !== undefined) {
+    imgPost = req.body.img
+  }
   con.query(sql, function(error, rows, filed){
     if(error) throw error;
     if(rows.length === 0) {
@@ -80,8 +84,22 @@ exports.editOne = (req, res, next) => {
     if (filename) {
       filename = rows[0].img.split('/images/')[1];
     }
-    var sql = `UPDATE posts SET msg = '${content}', img = '${req.body.img}' WHERE id = '${req.params.id}'`;
-    con.query(sql, function(error, rows, filed){
+    if(req.file) {
+      var imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      var sql = `UPDATE posts SET msg = '${content}', img = '${imgUrl}' WHERE id = '${req.params.id}'`;
+      con.query(sql, function(error, rows, filed){
+        if(error) throw error;
+        if (filename && req.body.img !== undefined) {
+          fs.unlink(`images/${filename}`, (err => {
+            if(err) throw err;
+            console.log('image suprr')
+          }))
+        }
+        return res.status(200).json({message: 'Publication mise à jour'})
+      })
+    } else {
+      var sql = `UPDATE posts SET msg = '${content}', img = '${imgPost}' WHERE id = '${req.params.id}'`;
+      con.query(sql, function(error, rows, filed){
       if(error) throw error;
       if (filename) {
         fs.unlink(`images/${filename}`, (err => {
@@ -91,6 +109,7 @@ exports.editOne = (req, res, next) => {
       }
       return res.status(200).json({message: 'Publication mise à jour'})
     })
+    }  
   })
 }
 

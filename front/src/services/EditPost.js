@@ -1,31 +1,29 @@
 import { api } from "../config/config"
 
-export function editPost(textId, postid, img) {
+export function editPost(textId, postid, img, imgval, msgval, msg) {
 
   function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&qut;');
     }
-
     const userInfo = JSON.parse(localStorage.getItem('info'))
     const axios = require('axios').default;
-    console.log(img)
-    let textValue = document.getElementById(textId).value
-    let msgValue = {
-      msg: htmlEntities(textValue),
-      img: ''
+    let msgValue = new FormData();
+    msgValue.append('msg', htmlEntities(msgval ? msgval : msg));
+    if (imgval) {
+        msgValue.append('profilImg', imgval)
     }
-    if (img) {
-      let msgValue = {
-        msg: htmlEntities(textValue),
-        img: img
-      }
+    if (!imgval && img) {
+        msgValue.append('img', img)
     }
-    if (!textValue && !img) {
+    if (!msg && !msgval && !img && !imgval) {
       return false
     }
-    if (img || textValue !== '') {
+    if (img || imgval || msg || msgval) {
       axios.put(api + '/api/post/' + postid, msgValue, {
-        headers: {'Authorization' : 'Bearer ' + userInfo.token}
+        headers: {
+          'Authorization' : 'Bearer ' + userInfo.token,
+          "Accept": 'application/json',
+          "Content-Type": "application/json"}
       })
         .then(function (response){ // Récupération des données, et mis en state.
           document.getElementById(textId).value = ''

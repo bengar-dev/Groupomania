@@ -14,7 +14,7 @@ router.post('/', auth, multer, postCtrl.postOne)
 router.post('/:id/like', auth, postCtrl.postLike)
 router.post('/:id/cmt', auth, postCtrl.postCmt)
 
-router.put('/:id', auth, postCtrl.editOne)
+router.put('/:id', auth, multer, postCtrl.editOne)
 router.put('/cmt/:id', auth, postCtrl.editCmt)
 
 router.delete('/:id', auth, postCtrl.deleteOne)
