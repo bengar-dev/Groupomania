@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 
 import { getInfo } from '../services/GetUser.js'
 import Logout from '../services/Logout.js'
-import Auth from '../services/Auth.js'
 
 // RecoilJS
 import { useRecoilState } from 'recoil'
@@ -13,7 +12,6 @@ import { userInfo } from '../atoms/userinfo.js'
 import { authState } from '../atoms/auth.js'
 
 function Header() {
-  const [contenu, updateContenu ] = useRecoilState(content)
   const [user, updateUser] = useRecoilState(userInfo)
   const [auth, updateAuth] = useRecoilState(authState)
 
@@ -30,14 +28,6 @@ function Header() {
     }
   }
 
-  // gestion contenu du forum
-  function handleContent() {
-    if (contenu === 0) {
-      updateContenu(1)
-    } else {
-      updateContenu(0)
-    }
-  }
   // si notre state user est vide alors on appel notre fonction async GetUser pour récupérer les infos.
   if(user.length === 0) {
       repGetUser()
