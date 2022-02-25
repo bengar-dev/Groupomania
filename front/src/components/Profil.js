@@ -2,12 +2,10 @@ import { Link, useNavigate } from 'react-router-dom'
 
 //Recoil JS
 import { useRecoilState } from 'recoil'
-import {content} from '../atoms/contenu.js'
 import { userInfo } from '../atoms/userinfo.js'
 
 function Profil() {
 
-  const [ contenu, updateContenu ] = useRecoilState(content)
   const [ user, updateUser ] = useRecoilState(userInfo)
   const navigate = useNavigate();
 

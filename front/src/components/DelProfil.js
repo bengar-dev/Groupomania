@@ -59,9 +59,9 @@ function DelProfil() {
           <p className='w-9/12 text-center text-xs text-red-600' id='alert-del-desc'>All of your data will be lost, if you are sure to delete your accout, please confirm your password.</p>
           <label htmlFor='passconfirm_del' className='mt-6 w-full ml-0 text-sm font-medium'>Confirm your password</label>
           <input className='mt-2 w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' type='password' id='passconfirm_del' name='passconfirm_del' value={pass} onChange={(e) => updatePass(e.target.value)}/>
-          <div className="w-full flex flex-row-reverse">
-            <button aria-label="Delete my Account" title="Delete my Account" type='button' type='submit' className='md:ml-0 md:mr-0 md:mt-2 p-2 bg-emerald-100 border border-emerald-400 w-11/12 md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(repDel(pass))}><i className='fas fa-check' /></button>
-            <button aria-label="Back to Edit Profil" title="Back to Edit Profil" type='button' className='mt-2 md:mt-2 mr-0 md:mr-1 p-2 bg-orange-100 border border-orange-400 w-11/12 md:w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' onClick={(e) => e.preventDefault(navigate('/edit-profil'))}><i className="fas fa-arrow-circle-left"></i></button>
+          <div className="w-full flex flex-col md:flex-row-reverse">
+            <button aria-label="Delete my Account" title="Delete my Account" type='button' type='submit' className='mr-auto ml-auto mt-2 md:ml-0 md:mr-0 md:mt-2 p-2 bg-emerald-100 border border-emerald-400 w-full md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(repDel(pass))}><i className='fas fa-check' /></button>
+            <button aria-label="Back to Edit Profil" title="Back to Edit Profil" type='button' className='mr-auto ml-auto mt-2 md:mt-2 mr-0 md:mr-1 p-2 bg-orange-100 border border-orange-400 w-full md:w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' onClick={(e) => e.preventDefault(navigate('/edit-profil'))}><i className="fas fa-arrow-circle-left"></i></button>
           </div>
         </form>
       </div>

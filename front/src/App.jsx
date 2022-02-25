@@ -11,6 +11,7 @@ import Posts from './components/Posts.js'
 import Profil from './components/Profil.js'
 import EditProfil from './components/EditProfil.js'
 import DeleteProfil from './components/DelProfil.js'
+import UserProfil from './components/UserProfil.js'
 
 import Error from './components/404.js'
 
@@ -28,6 +29,7 @@ function App() {
                       <Route path='profil' element={<Profil />} />
                       <Route path='edit-profil' element={<EditProfil />} />
                       <Route path='delete-profil' element={<DeleteProfil />} />
+                      <Route path='user-profil/:id' element={<UserProfil />} />
                       <Route path='*' element={<Error />} />
                     </Routes>
                     <Footer />

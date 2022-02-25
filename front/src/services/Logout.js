@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 //Recoil JS
 import { useRecoilState } from 'recoil'
 import { authState } from '../atoms/auth.js'
-import { userInfo } from '../atoms/userinfo.js'
+import { userInfo, userPublic } from '../atoms/userinfo.js'
 import { content } from '../atoms/contenu.js'
 import {alertMsg} from '../atoms/alertmsg.js'
 import { firstnameValue, lastnameValue, avatarValue, avatarPrev } from '../atoms/edituser.js'
@@ -13,6 +13,7 @@ function Logout() {
 
     const [auth, updateAuth] = useRecoilState(authState)
     const [user, updateUser] = useRecoilState(userInfo)
+    const [users, updateUsers] = useRecoilState(userPublic)
     const [contenu, updateContenu ] = useRecoilState(content)
     const [alrtmsg, updatealrtMsg] = useRecoilState(alertMsg)
     const [first, upfirst] = useRecoilState(firstnameValue)
@@ -37,6 +38,7 @@ function Logout() {
         upposts([])
         upcmts([])
         upcmtsVal('')
+        updateUsers([])
         navigate('/')
         window.location.reload(false);
     }
