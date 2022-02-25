@@ -7,6 +7,8 @@ import { deleteCmt } from '../services/DeleteCmt'
 import { editCmt } from '../services/EditCmt'
 import { likePost } from '../services/LikePost'
 
+import React, {useState, useEffect, useRef} from 'react'
+
 import { htmlEntities } from '../functions/htmlEntities'
 import { removeItemAtIndex } from '../functions/removeItem'
 import { replaceItemAtIndex } from '../functions/replaceItem'
@@ -14,7 +16,7 @@ import { randomInt } from '../functions/randomInt'
 
 import { useRecoilState} from 'recoil'
 import { alertMsg } from '../atoms/alertmsg.js'
-import { displayPosts, displayCmts, cmtsValue, editState, msgValue, cmtState, imgTemp, imgValue } from '../atoms/posts.js'
+import { displayPosts, displayCmts, cmtsValue, editState, msgValue, cmtState, imgTemp, imgValue, maxDisplay } from '../atoms/posts.js'
 import { userInfo } from '../atoms/userinfo.js'
 import { firstnameValue, lastnameValue, avatarPrev } from '../atoms/edituser.js'
 
@@ -35,7 +37,22 @@ function PostsContent() {
     const [ avatarPreview ] = useRecoilState(avatarPrev)
     const [ editpst, updateEditPost ] = useRecoilState(editState)
     const [ alert, updateAlert ] = useRecoilState(alertMsg)
+    const [ maxdisp, updateDisp] = useRecoilState(maxDisplay)
     const userToken = JSON.parse(localStorage.getItem('info'))
+
+    const infiniteCheck = () => {
+      const {scrollTop, scrollHeight, clientHeight} = document.documentElement
+      if(scrollHeight - scrollTop === clientHeight) {
+        updateDisp((value) => value + 1)
+      }
+    }
+    
+    useEffect(() => {
+      window.addEventListener('scroll', infiniteCheck)
+      return() => {
+          window.removeEventListener('scroll', infiniteCheck)
+      }
+  }, [])
 
     // fonction async pour récupérer les infos de notre service getPosts
     async function repPosts() {
@@ -269,7 +286,7 @@ function PostsContent() {
 
     // affichage de notre Page.
     return ( <div className='mt-10 mb-20 flex flex-col items-center container mx-auto max-w-screen-md bg-white rounded-lg shadow-lg pb-4'>
-   {posts.map(post =>
+   {posts.slice(0 , maxdisp).map(post =>
            post.postId ? <div key={post.postId} className='w-11/12 bg-slate-100 flex flex-col mt-4 p-1 rounded'>
            <div className='flex w-full items-center p-1'>
              <img className='h-10 w-10 object-cover rounded-full' src={post.userId === userToken.userId ? (avatarPreview === '' ? post.avatar : avatarPreview) : post.avatar} alt={'avatar ' + post.firstname}/>
@@ -287,7 +304,7 @@ function PostsContent() {
             {handleLikes(post.postId, userToken.userId, post.userLike)}
            </div>
            <div className='flex flex-col'>
-             <form className='flex flex-col md:flex-row'><label htmlFor={post.postId + '-cmt'} title='Input comment'></label><input name={post.postId + '-cmt'} className='w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id={post.postId + '-cmt'} type='text' onChange={(e) => e.preventDefault(updateValueCmts(e.target.value))} placeholder='Comment here' /> <button aria-label="Post comment" title="Post comment" type='button' className='ml-1 bg-emerald-100 border border-emerald-400 mt-1 md:mt-0 h-10 md:h-auto md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(verifCmt(post.postId))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button></form>
+             <form className='flex flex-col md:flex-row'><label htmlFor={post.postId + '-cmt'} title='Input comment'><p className='hidden'>Input Comment</p></label><input name={post.postId + '-cmt'} className='w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id={post.postId + '-cmt'} type='text' onChange={(e) => e.preventDefault(updateValueCmts(e.target.value))} placeholder='Comment here' /> <button aria-label="Post comment" title="Post comment" type='button' className='ml-1 bg-emerald-100 border border-emerald-400 mt-1 md:mt-0 h-10 md:h-auto md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(verifCmt(post.postId))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button></form>
               <div className='flex flex-col'>
                 {comments.map(cmt => (cmt.postId === post.postId) ? <div className='border-l-4 border-red-300 mt-2' key={cmt.cmtId}>
                   <div className='flex p-2 bg-slate-50'>

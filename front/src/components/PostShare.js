@@ -77,7 +77,7 @@ function PostShare() {
                 <textarea className='mt-2 h-40 border rounded resize-none p-2 text-xs focus:outline-none' id="post" placeholder="Tell us about your day" value={contentPost} onChange={(e) => e.preventDefault(handleChange(e))}></textarea>
                 {imgtempoMsg ?<img className='mt-2 ml-auto mr-auto w-auto h-60 object-cover rounded-lg' src={imgtempoMsg} alt='image-post'/> : ''}
                 <div className="flex items-center mt-2">
-                    <label htmlFor='img' className='p-2 h-12 bg-orange-100 border border-orange-400 w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' aria-hidden="true"><i className="fas fa-images"></i>
+                    <label htmlFor='img' className='p-2 h-12 bg-orange-100 border border-orange-400 w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' aria-hidden="true"><i className="fas fa-images"></i><p className='hidden'>Image</p>
                     <input type='file' className='w-0' id='img' accept='images/*' onChange={(e) => changeFile(e)}/></label>
                     {displaySubButton(info.id, info.avatar, info.firstname, info.lastname)}
                 </div>

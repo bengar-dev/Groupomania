@@ -44,3 +44,8 @@ export const imgTempMsg = atom({
   key: 'imgTempMsg',
   default: null
 })
+
+export const maxDisplay = atom({
+  key: 'maxDisplay',
+  default: 3
+})
