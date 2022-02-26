@@ -35,13 +35,13 @@ function Header() {
     }
   }
 
-  let darkClass = 'transition-all absolute h-8 w-8 shadow-lg border border-gray-600 rounded-full'
+  let darkClass = 'transition-all absolute h-8 w-8 shadow-lg border rounded-full'
   if(localSetting === 'light') {
     updateSwitch('ml-0')
-    darkClass = darkClass + ' bg-slate-600 ' + darkSwitch
+    darkClass = darkClass + ' bg-sky-300 border-sky-400 ' + darkSwitch
   } else {
     updateSwitch('ml-6')
-    darkClass = darkClass + ' bg-slate-600 ' + darkSwitch
+    darkClass = darkClass + ' bg-sky-900 border-sky-600 ' + darkSwitch
   }
 
   // si notre state user est vide alors on appel notre fonction async GetUser pour récupérer les infos.
@@ -63,10 +63,10 @@ function Header() {
 
   function handleButton() {
     if (localSetting === 'light') {
-      return <i className="fas fa-moon text-white"></i>
+      return <i className="fas fa-sun text-yellow-400"></i>
     }
     else {
-      return <i className="fas fa-sun text-yellow-400"></i>
+      return <i className="fas fa-moon text-white"></i>
     }
   }
 

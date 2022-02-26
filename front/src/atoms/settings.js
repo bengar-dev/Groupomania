@@ -5,11 +5,6 @@ export const displayDark = atom({
   default: ''
 })
 
-export const stateDark = atom({
-  key: 'stateDark',
-  default: 0
-})
-
 export const switchDark = atom({
   key: 'switchDark',
   default: 'ml-0'
