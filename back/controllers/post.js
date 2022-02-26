@@ -38,24 +38,23 @@ exports.getOne = (req, res, next) => {
 exports.postOne = (req, res, next) => {
   var userId = req.body.userId
   var content = sanitizer.escape(req.body.content)
-  var date = new Date()
   if(req.file) {
     var imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    var sql = `INSERT INTO posts (id, userId, msg, img, postedat) VALUES ('${req.body.id}','${req.body.userId}', '${content}', '${imgUrl}', NOW())`;
+    var sql = `INSERT INTO posts (id, userId, msg, img, postedat) VALUES ('${req.body.id}','${userId}', '${content}', '${imgUrl}', NOW())`;
     con.query(sql, function(error, rows, filed) {
     if(error) {
       return res.status(401).json({error})
     } else {
-      return res.status(200).json({userId, content, date})
+      return res.status(200).json({message: 'Publication envoyé'})
     }
   })
   } else {
-    var sql = `INSERT INTO posts (id, userId, msg, postedat) VALUES ('${req.body.id}','${req.body.userId}', '${content}', NOW())`;
+    var sql = `INSERT INTO posts (id, userId, msg, postedat) VALUES ('${req.body.id}','${userId}', '${content}', NOW())`;
     con.query(sql, function(error, rows, filed) {
     if(error) {
       return res.status(401).json({error})
     } else {
-      return res.status(200).json({userId, content, date})
+      return res.status(200).json({message: 'Publication envoyé'})
     }
   })
   }

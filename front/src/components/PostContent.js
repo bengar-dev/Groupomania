@@ -43,14 +43,14 @@ function PostsContent() {
     const userToken = JSON.parse(localStorage.getItem('info'))
     const navigate = useNavigate();
 
-    const infiniteCheck = () => {
+    const infiniteCheck = () => { // scroll infinite
       const {scrollTop, scrollHeight, clientHeight} = document.documentElement
       if(scrollHeight - scrollTop === clientHeight) {
-        updateDisp((value) => value + 1)
+        updateDisp((value) => value + 3)
       }
     }
-    
-    useEffect(() => {
+
+    useEffect(() => { // scroll infinite
       window.addEventListener('scroll', infiniteCheck)
       return() => {
           window.removeEventListener('scroll', infiniteCheck)
@@ -161,12 +161,12 @@ function PostsContent() {
             }
           }
           // affichage du Edit Post
-          return ( <div className='flex flex-col bg-slate-50 items-center p-4'>
+          return ( <div className='flex flex-col bg-slate-50 dark:bg-slate-800 items-center p-4'>
             {imgPrev ? <div><img className='w-auto h-60 object-cover rounded-lg shadow' src={imgPrev} alt='image post' /><button className='relative bottom-60 w-full bg-red-600/40 hover:bg-red-600 rounded-lg text-white p-1' onClick={(e) => e.preventDefault(updateImgPrev(null))}><i className="fas fa-trash" aria-hidden="true"></i></button>
             </div> : ''}
             <label htmlFor='edit-img' className='w-9/12 p-1 md:p-0 md:w-3/12 bg-orange-200 border border-orange-600 hover:bg-orange-600 rounded-lg text-orange-600 hover:text-white text-center flex items-center justify-around' aria-hidden="true"><i className="fas fa-images"></i> <p className='font-medium text-sm'>Edit image</p>
             <input type='file' className='w-0' id='edit-img' accept='images/*' onChange={(e) => changeFile(e)}/></label>
-          <textarea className='w-full mt-2 resize-none h-40 text-xs p-2 focus:outline-none rounded-lg border' id={textId} value={msgVal ? msgVal : ''} placeholder={msg} onChange={(e) => updateMsgVal(e.target.value)}></textarea>
+          <textarea className='w-full mt-2 resize-none h-40 text-xs p-2 focus:outline-none rounded-lg border dark:bg-slate-600 dark:text-white' id={textId} value={msgVal ? msgVal : ''} placeholder={msg} onChange={(e) => updateMsgVal(e.target.value)}></textarea>
           <button className='mt-2 p-2 bg-emerald-100 border border-emerald-400 w-full text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(editPost(textId, postid, imgPrev, imgVal, msgVal, msg), updateEditPost(0), handleNewpost(), updateMsgVal(''), updateImgPrev(''))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button>
           </div>
         )
@@ -174,13 +174,13 @@ function PostsContent() {
       return (
         <div className='flex flex-col mb-2'>
            {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg' src={img} alt={'image publication ' + postid}/></div> : ''}
-           <p className='bg-slate-50 p-4 text-gray-800 font-light text-sm rounded'>{htmlEntities(msg)}</p>
+           <p className='bg-slate-50 p-4 text-gray-800 font-light text-sm rounded dark:bg-slate-600 dark:text-gray-200'>{htmlEntities(msg)}</p>
         </div>
       )
     }
 
     //Affichage Post Actions ( Edit / Delete )
-    function postActions(postuserid, postid, msg, postimg) {//splicePost(postid), deletePost(postid), 
+    function postActions(postuserid, postid, msg, postimg) {//splicePost(postid), deletePost(postid),
         if(postuserid === userToken.userId) { // affichage des options edit / delete quand le post appartient à l'utilisateur
           return <div className='flex ml-auto mr-0 justify-between w-20'>
           <button aria-label="Edit Publication" title="Edit Publication" type='button' className='bg-orange-100 border border-orange-400 text-orange-700 hover:bg-orange-400 hover:text-white w-8 h-8 rounded-lg' onClick={(e) => e.preventDefault(handleEdit(postid), updateImgPrev(postimg))}><i className='fas fa-pen'></i></button>
@@ -240,7 +240,7 @@ function PostsContent() {
             var textId= 'text-' + cmtid
             return ( <form className='flex flex-col md:flex-row'>
             <label htmlFor={textId}></label>
-            <input type='text' className='w-full bg-gray-50 border text-gray-800 text-xs h-10 md:h-6 p-2 rounded focus:outline-none focus:bg-gray-100' id={textId} value={commentsVal ? commentsVal : msg} onChange={(e) => updateValueCmts(e.target.value)}/>
+            <input type='text' className='w-full bg-gray-50 dark:bg-gray-600 dark:text-white border text-gray-800 text-xs h-10 md:h-6 p-2 rounded focus:outline-none focus:bg-gray-100' id={textId} value={commentsVal ? commentsVal : msg} onChange={(e) => updateValueCmts(e.target.value)}/>
             <button className='ml-0 mt-1 md:mt-0 md:ml-1 bg-emerald-100 border border-emerald-400 w-full h-10 md:h-auto md:w-12 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(updateEditCmt(0), updateComments(newCmt), editCmt(textId, cmtid))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button>
             </form>
           )
@@ -288,29 +288,31 @@ function PostsContent() {
     }
 
     // affichage de notre Page.
-    return ( <div className='mt-10 mb-20 flex flex-col items-center container mx-auto max-w-screen-md bg-white rounded-lg shadow-lg pb-4'>
+    return ( <div className='mt-10 flex flex-col items-center container mx-auto max-w-screen-md bg-white dark:bg-gray-500 rounded-lg shadow-lg pb-4'>
    {posts.slice(0 , maxdisp).map(post =>
-           post.postId ? <div key={post.postId} className='w-11/12 bg-slate-100 flex flex-col mt-4 p-1 rounded'>
+           post.postId ? <div key={post.postId} className='w-11/12 bg-slate-100 dark:bg-slate-800 flex flex-col mt-4 p-1 rounded'>
            <div className='flex w-full items-center p-1'>
              <img className='h-10 w-10 object-cover rounded-full' src={post.userId === userToken.userId ? (avatarPreview === '' ? post.avatar : avatarPreview) : post.avatar} alt={'avatar ' + post.firstname}/>
              <div className='flex flex-col ml-2'>
-             <button className='ml-0 mr-auto font-medium' onClick={(e) => e.preventDefault(navigate('/user-profil/' + post.userId))}>{post.userId === userToken.userId ? (firstname === '' ? post.firstname : firstname) : post.firstname} {post.userId === userToken.userId ? (lastname === '' ? post.lastname : lastname) : post.lastname}</button>
-             <p className='text-xs'>{moment(post.postedat).format('LLL')}</p>
+             <button className='ml-0 mr-auto font-medium dark:text-white' onClick={(e) => e.preventDefault(navigate('/user-profil/' + post.userId))}>{post.userId === userToken.userId ? (firstname === '' ? post.firstname : firstname) : post.firstname} {post.userId === userToken.userId ? (lastname === '' ? post.lastname : lastname) : post.lastname}</button>
+             <p className='text-xs dark:text-white'>{moment(post.postedat).format('LLL')}</p>
              </div>
              {postActions(post.userId, post.postId, post.msg, post.img)}
            </div>
            <div className='post-content'>
            <p className='text-center text-xs font-medium text-red-500'>{alert}</p>
            {showEdit(post.msg, post.img, post.postId, post.userId, userToken.userId)}
-             {post.countLike ? <div className='ml-2 flex items-center justify-between w-8 h-8 mb-2 text-red-800 rounded text-sm'><i className="fas fa-heart"></i> <p>{post.countLike}</p></div> : <div className='ml-2 flex items-center w-8 mb-2 text-red-800 rounded text-sm h-8'><i className="fas fa-heart"></i></div>}
+             {post.countLike ? <div className='ml-2 flex items-center justify-between w-8 h-8 mb-2 text-red-800 dark:text-red-200 rounded text-sm'><i className="fas fa-heart"></i> <p>{post.countLike}</p></div> : <div className='ml-2 flex items-center w-8 mb-2 text-red-800 rounded text-sm h-8'><i className="fas fa-heart"></i></div>}
              <div className='post-sep-line'></div>
             {handleLikes(post.postId, userToken.userId, post.userLike)}
            </div>
            <div className='flex flex-col'>
-             <form className='flex flex-col md:flex-row'><label htmlFor={post.postId + '-cmt'} title='Input comment'><p className='hidden'>Input Comment</p></label><input name={post.postId + '-cmt'} className='w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id={post.postId + '-cmt'} type='text' onChange={(e) => e.preventDefault(updateValueCmts(e.target.value))} placeholder='Comment here' /> <button aria-label="Post comment" title="Post comment" type='button' className='ml-1 bg-emerald-100 border border-emerald-400 mt-1 md:mt-0 h-10 md:h-auto md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(verifCmt(post.postId))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button></form>
+             <form className='flex flex-col md:flex-row'><label htmlFor={post.postId + '-cmt'} title='Input comment'><p className='hidden'>Input Comment</p></label><input name={post.postId + '-cmt'} className='w-full bg-gray-50 dark:bg-gray-600 dark:text-white border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id={post.postId + '-cmt'} type='text'
+                onChange={(e) => e.preventDefault(updateValueCmts(e.target.value))} placeholder='Comment here' /> <button aria-label="Post comment" title="Post comment" type='button' className='ml-1 bg-emerald-100 border border-emerald-400 mt-1 md:mt-0 h-10 md:h-auto md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white'
+                 onClick={(e) => e.preventDefault(verifCmt(post.postId))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button></form>
               <div className='flex flex-col'>
-                {comments.map(cmt => (cmt.postId === post.postId) ? <div className='border-l-4 border-red-300 mt-2' key={cmt.cmtId}>
-                  <div className='flex p-2 bg-slate-50'>
+                {comments.map(cmt => (cmt.postId === post.postId) ? <div className='border-l-4 border-red-300 dark:border-red-600 mt-2' key={cmt.cmtId}>
+                  <div className='flex p-2 bg-slate-50 dark:bg-slate-600'>
                     <img className='h-8 w-8 rounded-full object-cover' src={cmt.userId === userToken.userId ? (avatarPreview === '' ? cmt.avatar : avatarPreview) : cmt.avatar} alt={'avatar ' + cmt.firstname} />
                     <div className='ml-2 flex flex-col'>
                       <button className='ml-0 mr-auto text-sm font-medium' onClick={(e) => e.preventDefault(navigate('/user-profil/' + cmt.userId))}>{cmt.userId === userToken.userId ? (firstname === '' ? cmt.firstname : firstname) : cmt.firstname} {cmt.userId === userToken.userId ? (lastname === '' ? cmt.lastname : lastname) : cmt.lastname}</button>
@@ -318,7 +320,7 @@ function PostsContent() {
                     </div>
                     {cmtActions(userToken.userId, cmt.userId, cmt.cmtId)}
                   </div>
-                  <div className='text-sm bg-slate-50 p-2 font-light'>
+                  <div className='text-sm bg-slate-50 dark:bg-slate-500 p-2 font-light'>
                     {showEditCmt(cmt.msg, cmt.cmtId, cmt.userId, userToken.userId)}
                   </div>
               </div> : '' )}

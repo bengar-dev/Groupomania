@@ -13,16 +13,26 @@ import EditProfil from './components/EditProfil.js'
 import DeleteProfil from './components/DelProfil.js'
 import UserProfil from './components/UserProfil.js'
 
+// Recoil JS
+import { useRecoilState } from 'recoil'
+import { displayDark } from './atoms/settings.js'
+
 import Error from './components/404.js'
 
 function App() {
 
   const isAuth = localStorage.getItem('info')
+  const [ dark, updateDark ] = useRecoilState(displayDark)
+  const localSetting = localStorage.getItem('settings')
+
+  if (!localSetting) {
+    localStorage.setItem('settings', 'light')
+  }
 
   return (
           <BrowserRouter>
             {isAuth !== null ?
-                  <div>
+                  <div className={localSetting}>
                     <Header />
                     <Routes>
                       <Route exact path='/' element={<Posts />} />

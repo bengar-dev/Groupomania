@@ -69,12 +69,12 @@ function PostShare() {
     }
 
   return (
-    <div className='mt-10 flex flex-col items-center container mx-auto max-w-screen-md bg-white rounded-lg shadow-lg'>
+    <div className='flex flex-col items-center container mx-auto max-w-screen-md bg-white dark:bg-gray-500 rounded-lg shadow-lg'>
         {user.map(info =>
             <div key={info.id} className="w-full rounded-lg p-2 mt-2">
             <form className="flex flex-col">
-                <label htmlFor='post' className='font-medium text-sm'>Hi {info.firstname} , what's up today ? 🙂</label>
-                <textarea className='mt-2 h-40 border rounded resize-none p-2 text-xs focus:outline-none' id="post" placeholder="Tell us about your day" value={contentPost} onChange={(e) => e.preventDefault(handleChange(e))}></textarea>
+                <label htmlFor='post' className='font-medium text-sm dark:text-white'>Hi {info.firstname} , what's up today ? 🙂</label>
+                <textarea className='mt-2 h-40 border rounded resize-none p-2 dark:bg-gray-600 dark:text-white text-xs focus:outline-none' id="post" placeholder="Tell us about your day" value={contentPost} onChange={(e) => e.preventDefault(handleChange(e))}></textarea>
                 {imgtempoMsg ?<img className='mt-2 ml-auto mr-auto w-auto h-60 object-cover rounded-lg' src={imgtempoMsg} alt='image-post'/> : ''}
                 <div className="flex items-center mt-2">
                     <label htmlFor='img' className='p-2 h-12 bg-orange-100 border border-orange-400 w-20 text-center rounded text-orange-700 hover:bg-orange-400 hover:text-white' aria-hidden="true"><i className="fas fa-images"></i><p className='hidden'>Image</p>
