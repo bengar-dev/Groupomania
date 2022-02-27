@@ -9,6 +9,8 @@ export function editPost(textId, postid, img, imgval, msgval, msg) {
     const axios = require('axios').default;
     let msgValue = new FormData();
     msgValue.append('msg', htmlEntities(msgval ? msgval : msg));
+    console.log(img)
+    console.log(imgval)
     if (imgval) {
         msgValue.append('profilImg', imgval)
     }

@@ -34,14 +34,16 @@ function App() {
             {isAuth !== null ?
                   <div className={localSetting}>
                     <Header />
-                    <Routes>
-                      <Route exact path='/' element={<Posts />} />
-                      <Route path='profil' element={<Profil />} />
-                      <Route path='edit-profil' element={<EditProfil />} />
-                      <Route path='delete-profil' element={<DeleteProfil />} />
-                      <Route path='user-profil/:id' element={<UserProfil />} />
-                      <Route path='*' element={<Error />} />
-                    </Routes>
+                    <div className='pt-10 bg-gray-50 dark:bg-slate-800 h-screen'>
+                      <Routes>
+                        <Route exact path='/' element={<Posts />} />
+                        <Route path='profil' element={<Profil />} />
+                        <Route path='edit-profil' element={<EditProfil />} />
+                        <Route path='delete-profil' element={<DeleteProfil />} />
+                        <Route path='user-profil/:id' element={<UserProfil />} />
+                        <Route path='*' element={<Error />} />
+                      </Routes>
+                    </div>
                     <Footer />
                   </div>
                   :

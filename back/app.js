@@ -1,18 +1,12 @@
 const express  = require('express')
 const app = express();
 var mysql = require('mysql');
-
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 
 const path = require('path');
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "groupo_db"
-});
+const con = require('./config/mysql_cfg.js')
 
 con.connect(function(err) {
   if (err) throw err;

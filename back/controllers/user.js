@@ -1,16 +1,10 @@
 const express = require('express');
 var mysql = require('mysql');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "groupo_db"
-});
+const sanitizer = require('sanitizer')
+const con = require('../config/mysql_cfg.js')
 
 
 exports.getAllUsers = (req, res, next) => {
@@ -37,32 +31,42 @@ exports.getUser = (req, res, next) => {
 };
 
 exports.signup = (req, res, next) => {
-  const validateEmail = (email) => {
+    const validateEmail = (email) => {
       return email.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
     };
+    const validatePass = (pass) => {
+      return pass.match(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
+      )
+    }
     // vérification format email
     if(!validateEmail(req.body.email)) {
-        return res.status(401).json({message: 'Email non valide'});
+        return res.status(401).json({message: 'Email invalid'});
     }
+    if(!validatePass(req.body.password)) {
+      return res.status(401).json({message: 'Password invalid'})
+    }
+    var firstname = sanitizer.escape(req.body.firstname)
+    var lastname = sanitizer.escape(req.body.lastname)
     var sql = `SELECT * FROM users WHERE email = '${req.body.email}'`
     con.query(sql, function(err, rows, filed) {
       if (err) throw err;
       if (rows.length !== 0) {
-        return res.status(401).json({message: 'Email déjà existant'})
+        return res.status(401).json({message: 'Email already exist'})
       }
       else {
         // bcrypt js
         bcrypt.hash(req.body.password, 10)
             .then(
                 hash => {
-                    var sql = `INSERT INTO users (email, password, firstname, lastname) VALUES ('${req.body.email}', '${hash}', '${req.body.firstname}', '${req.body.lastname}')`;
+                    var sql = `INSERT INTO users (email, password, firstname, lastname) VALUES ('${req.body.email}', '${hash}', '${firstname}', '${lastname}')`;
                     con.query(sql, function(err, rows, field) {
                         if(err) {
                             return res.status(401).json({err});
                         } else {
-                            return res.status(200).json({message: 'Utilisateur ajouté'});
+                            return res.status(200).json({message: 'Success'});
                         }
                     });
                 }
@@ -100,6 +104,8 @@ exports.login = (req, res, next) => {
 }
 
 exports.editUser = (req, res, next) => {
+      var firstname = sanitizer.escape(req.body.firstname)
+      var lastname = sanitizer.escape(req.body.lastname)
       var sql = `SELECT * FROM users where id = '${req.body.userId}'`
       con.query(sql, function(error, rows, filed){
         if(error) throw error;
@@ -118,7 +124,7 @@ exports.editUser = (req, res, next) => {
             // vérification si il y a modification d'image
             if(req.file) {
               var imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-              var sql = `UPDATE users SET firstname = '${req.body.firstname}', lastname = '${req.body.lastname}', avatar = '${imgUrl}' WHERE id = '${req.body.userId}'`;
+              var sql = `UPDATE users SET firstname = '${firstname}', lastname = '${lastname}', avatar = '${imgUrl}' WHERE id = '${req.body.userId}'`;
                 con.query(sql, function(error, rows, filed) {
                   if(error) {
                       return err.status(401).json({message: 'Erreur'});
@@ -135,7 +141,7 @@ exports.editUser = (req, res, next) => {
                   }
                 })
             } else { // si il y a pas de modif image on fait simplement une requete !
-              var sql = `UPDATE users SET firstname = '${req.body.firstname}', lastname = '${req.body.lastname}' WHERE id = '${req.body.userId}'`;
+              var sql = `UPDATE users SET firstname = '${firstname}', lastname = '${lastname}' WHERE id = '${req.body.userId}'`;
                 con.query(sql, function(error, rows, filed) {
                   if(error) {
                       return err.status(401).json({message: 'Erreur'});

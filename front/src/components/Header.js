@@ -1,21 +1,19 @@
 import Logo from '../assets/logo.png'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
+import { htmlEntities } from '../functions/htmlEntities.js'
 import { getInfo } from '../services/GetUser.js'
 import Logout from '../services/Logout.js'
 
 // RecoilJS
 import { useRecoilState } from 'recoil'
-import { content } from '../atoms/contenu.js'
 import { userInfo, userPublic } from '../atoms/userinfo.js'
 import { displayDark, switchDark } from '../atoms/settings.js'
-import { authState } from '../atoms/auth.js'
 
 function Header() {
   const [user, updateUser] = useRecoilState(userInfo)
   const [users, updateUsers ] = useRecoilState(userPublic)
-  const [auth, updateAuth] = useRecoilState(authState)
   const [dark, updateDark] = useRecoilState(displayDark)
   const [darkSwitch, updateSwitch] = useRecoilState(switchDark)
   const navigate = useNavigate()
@@ -27,9 +25,7 @@ function Header() {
     const result = await getInfo(userInfo.userId, userInfo.token)
 
     if(!result) {
-        console.log(result)
         localStorage.removeItem('info');
-        updateAuth(0)
     } else {
         updateUser([result])
     }
@@ -76,11 +72,11 @@ function Header() {
       {user.map(info =>
       <div className='flex items-center' key={info.id}>
         <div className='flex items-center'>
-          <button className={darkClass} onClick={(e) => e.preventDefault(handleDark(localSetting))}>{handleButton()}</button>
+          <button className={darkClass} onClick={(e) => e.preventDefault(handleDark(localSetting))}>{handleButton()}<p className='hidden'>dark mode</p></button>
           <div className='bg-white h-6 w-14 mr-20 rounded-full'></div>
         </div>
         <img className='w-10 h-10 object-cover rounded-full shadow border-2' src={info.avatar} alt='avatar' />
-        <button className='transition-all ml-4 mr-2 text-sm font-medium text-gray-800 dark:text-white dark:hover:text-gray-300 hover:text-black' onClick={(e) => e.preventDefault(updateUsers([]), navigate('/profil'))}>{info.firstname} {info.lastname}</button>
+        <button className='transition-all ml-4 mr-2 text-sm font-medium text-gray-800 dark:text-white dark:hover:text-gray-300 hover:text-black' onClick={(e) => e.preventDefault(updateUsers([]), navigate('/profil'))}>{htmlEntities(info.firstname)} {htmlEntities(info.lastname)}</button>
         <Logout />
       </div>
       )}

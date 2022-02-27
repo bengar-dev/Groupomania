@@ -3,20 +3,14 @@ var mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const sanitizer = require('sanitizer')
-
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "groupo_db"
-});
+const con = require('../config/mysql_cfg.js')
 
 exports.getAll = (req, res, next) => {
   var sql = `SELECT *, posts.id AS postId FROM posts, users WHERE posts.userId = users.id ORDER BY postedat DESC`
   con.query(sql, function(error, rows, filed) {
     if (error) throw error;
     if (rows.length === 0) {
-        return res.status(401).json({message: 'Aucun post'});
+        return res.status(401).json({message: 'No posts'});
     } else {
         return res.status(200).json({rows});
     }
@@ -28,7 +22,7 @@ exports.getOne = (req, res, next) => {
   con.query(sql, function(error, rows, filed) {
     if (error) throw error;
     if (rows.length === 0) {
-        return res.status(401).json({message: 'Aucun post'});
+        return res.status(401).json({message: 'No posts'});
     } else {
         return res.status(200).json({rows});
     }
@@ -45,7 +39,7 @@ exports.postOne = (req, res, next) => {
     if(error) {
       return res.status(401).json({error})
     } else {
-      return res.status(200).json({message: 'Publication envoyé'})
+      return res.status(200).json({message: 'Success'})
     }
   })
   } else {
@@ -54,7 +48,7 @@ exports.postOne = (req, res, next) => {
     if(error) {
       return res.status(401).json({error})
     } else {
-      return res.status(200).json({message: 'Publication envoyé'})
+      return res.status(200).json({message: 'Success'})
     }
   })
   }
@@ -70,7 +64,7 @@ exports.editOne = (req, res, next) => {
   con.query(sql, function(error, rows, filed){
     if(error) throw error;
     if(rows.length === 0) {
-      return res.status(401).json({message: 'Publication inconnue'})
+      return res.status(401).json({message: 'Unknow post'})
     }
     let filename = rows[0].img
     // vérification si le post appartien bien à l'utilisateur
@@ -78,7 +72,7 @@ exports.editOne = (req, res, next) => {
     let decodedToken = jwt.verify(token, 'EZJIAOEJZHIOEJZAIOEJZAIOEZAJUIEOZAJUEIOZA');
     let userId = decodedToken.userId;
     if (rows[0].userId !== userId){
-      return res.status(401).json({message: 'Non autorisé'})
+      return res.status(401).json({message: 'Unauthorized'})
     }
     if (filename) {
       filename = rows[0].img.split('/images/')[1];
@@ -94,7 +88,7 @@ exports.editOne = (req, res, next) => {
             console.log('image suprr')
           }))
         }
-        return res.status(200).json({message: 'Publication mise à jour'})
+        return res.status(200).json({message: 'Success'})
       })
     } else {
       var sql = `UPDATE posts SET msg = '${content}', img = '${imgPost}' WHERE id = '${req.params.id}'`;
@@ -106,9 +100,9 @@ exports.editOne = (req, res, next) => {
           console.log('image suprr')
         }))
       }
-      return res.status(200).json({message: 'Publication mise à jour'})
+      return res.status(200).json({message: 'Success'})
     })
-    }  
+    }
   })
 }
 
@@ -119,20 +113,20 @@ exports.editCmt = (req, res, next) => {
   con.query(sql, function (error, rows, filed) {
     if(error) throw error
     if (!rows.length) {
-      return res.status(401).json({message: 'Commentaire inconnu'})
+      return res.status(401).json({message: 'Unknow comment'})
     }
     // vérification si le commentaire appartient bien à l'utilisateur
     let token = req.headers.authorization.split(' ')[1];
     let decodedToken = jwt.verify(token, 'EZJIAOEJZHIOEJZAIOEJZAIOEZAJUIEOZAJUEIOZA');
     let userId = decodedToken.userId;
     if (rows[0].userId !== userId) {
-      return res.status(401).json({message : 'Non autorisé'})
+      return res.status(401).json({message : 'Unauthorized'})
     }
     else {
       var sql = `UPDATE cmt SET msg = '${content}' WHERE id = '${req.params.id}'`
       con.query(sql, function(error, rows, filed) {
         if(error) throw error
-        return res.status(200).json({message: 'Commentaire mis à jour'})
+        return res.status(200).json({message: 'Success'})
       })
     }
   })
@@ -149,7 +143,7 @@ exports.deleteOne = (req, res, next) => {
   con.query(sql, function(error, rows, filed) {
     if (error) throw error;
     if (rows.length === 0) {
-      return res.status(401).json({message: 'Publication inconnue'})
+      return res.status(401).json({message: 'Unknow post'})
     }
     let filename = null
     if (rows[0].img !== null) {
@@ -166,12 +160,11 @@ exports.deleteOne = (req, res, next) => {
             var sql = `DELETE FROM cmt WHERE postId = '${req.params.id}'`
             con.query(sql, function(error, rows, filed) {
               if (error) throw error;
-              return res.status(200).json({message: 'Post supprimé'})
+              return res.status(200).json({message: 'Success'})
             })
             if(filename) {
               fs.unlink(`images/${filename}`, (err => {
                 if(err) throw err;
-                console.log('image suprr')
               }))
             }
             else {
@@ -180,7 +173,7 @@ exports.deleteOne = (req, res, next) => {
           }
         })
     } else {
-        return res.status(401).json({message: 'Non autorisé'})
+        return res.status(401).json({message: 'Unauthorized'})
     }
   })
 }
@@ -192,7 +185,7 @@ exports.postCmt = (req, res, next) => {
     if(error) {
       return res.status(400).json({error})
     } else {
-      return res.status(200).json({message: 'Commentaire posté!'})
+      return res.status(200).json({message: 'Success'})
     }
   })
 }
@@ -202,7 +195,7 @@ exports.getCmt = (req, res, next) => {
   con.query(sql, function(error, rows, filed) {
     if(error) throw error;
     if(rows.length === 0){
-      return res.status(401).json({message: 'Aucun commentaire'})
+      return res.status(401).json({message: 'No comments'})
     }
     else {
       return res.status(200).json({rows})
@@ -219,7 +212,7 @@ exports.deleteCmt = (req, res, next) => {
   con.query(sql, function(error, rows, filed) {
     if(error) throw error;
     if(rows.length === 0) {
-      return res.status(401).json({message: 'Aucun commentaire'})
+      return res.status(401).json({message: 'No comments'})
     }
     if (rows[0].userId == rows[0].id || rows[0].admin == 1) {
       var sql = `DELETE FROM cmt WHERE id = '${req.params.id}'`
@@ -227,7 +220,7 @@ exports.deleteCmt = (req, res, next) => {
         if(error) {
           return res.status(401).json({error})
         } else {
-          return res.status(200).json({message: 'Cmt supprimé'})
+          return res.status(200).json({message: 'Success'})
         }
       })
     } else {
@@ -241,7 +234,7 @@ exports.postLike = (req, res, next) => {
   con.query(sql, function(error, rows, filed) {
     if(error) throw error;
     if(rows.length === 0) {
-      return res.status(401).json({message: 'Publication inconnue'})
+      return res.status(401).json({message: 'Unknow posts'})
     }
     const userLike = JSON.parse(rows[0].userLike)
     const foundUser = userLike.findIndex((a) => a == req.body.userId);

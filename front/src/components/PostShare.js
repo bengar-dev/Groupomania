@@ -1,4 +1,5 @@
 import { sendPost } from '../services/SendPost.js'
+import { htmlEntities } from '../functions/htmlEntities.js'
 
 // Recoil JS
 import { useRecoilState } from 'recoil'
@@ -29,7 +30,7 @@ function PostShare() {
   function displaySubButton(id, avatar, firstname, lastname) {
       if(subButton || imgtempo) {
           const randomId = randomInt(0, 100000) * id
-          return <button className='ml-2 p-2 h-12 bg-emerald-100 border border-emerald-400 w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(sendPost(contentPost, randomId, img), updateContent(''), newPost(randomId, avatar, firstname, lastname, id), updateImgtempo(null), updateSubButton(null), updateImgtempoMsg(null))}><i className="fas fa-paper-plane"></i></button>
+          return <button className='ml-2 p-2 h-12 bg-emerald-100 border border-emerald-400 w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(sendPost(contentPost, randomId, img), updateContent(''), newPost(randomId, avatar, firstname, lastname, id), updateImgtempo(null), updateSubButton(null), updateImgtempoMsg(null), updateImg(null))}><i className="fas fa-paper-plane"></i></button>
       }
   }
 
@@ -55,7 +56,6 @@ function PostShare() {
         },
         ...old
         ])
-        console.log(posts)
     }
 
     function changeFile(e) {
@@ -73,7 +73,7 @@ function PostShare() {
         {user.map(info =>
             <div key={info.id} className="w-full rounded-lg p-2 mt-2">
             <form className="flex flex-col">
-                <label htmlFor='post' className='font-medium text-sm dark:text-white'>Hi {info.firstname} , what's up today ? 🙂</label>
+                <label htmlFor='post' className='font-medium text-sm dark:text-white'>Hi {htmlEntities(info.firstname)} , what's up today ? 🙂</label>
                 <textarea className='mt-2 h-40 border rounded resize-none p-2 dark:bg-gray-600 dark:text-white text-xs focus:outline-none' id="post" placeholder="Tell us about your day" value={contentPost} onChange={(e) => e.preventDefault(handleChange(e))}></textarea>
                 {imgtempoMsg ?<img className='mt-2 ml-auto mr-auto w-auto h-60 object-cover rounded-lg' src={imgtempoMsg} alt='image-post'/> : ''}
                 <div className="flex items-center mt-2">

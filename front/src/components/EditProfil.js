@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 //function
 import { editUser } from '../services/EditUser'
+import { htmlEntities } from '../functions/htmlEntities.js'
 
 //Recoil JS
 import { useRecoilState } from 'recoil'
@@ -73,15 +74,15 @@ function EditProfil() {
 
   return (<div>
       {user.map(info =>
-        <div key={info.id} className='mt-10 container mx-auto max-w-screen-md bg-white rounded-lg shadow-lg'>
+        <div key={info.id} className='container mx-auto max-w-screen-md bg-white rounded-lg shadow-lg'>
         <form encType='multipart/form-data' className='flex flex-col'>
           <input type='file' className='h-0' id='avatar' accept='images/*' onChange={(e) => changeFile(e, info.avatar)}/>
           <label htmlFor='avatar' className='flex flex-col items-center'><img className='mt-2 mb-2 w-28 h-28 object-cover rounded-full' src={avatarPreview ? avatarPreview : info.avatar} alt={'Avatar ' + info.firstname} /><span className='bg-gray-200 hover:bg-gray-600 hover:text-white hover:shadow flex justify-center items-center pl-2 pt-1 pb-1 pr-2 rounded text-xs uppercase'><i className="fas fa-upload mr-2"></i> Upload avatar</span></label>
           <p className='mt-1 h-6 text-emerald-400 text-sm uppercase font-medium text-center'>{alertmsg}</p>
           <label htmlFor='firstname' className='mt-2 ml-2 uppercase text-sm font-medium text-red-600'>Firstname</label>
-          <input type='text' className='ml-2 mr-2 bg-gray-50 border text-gray-800 text-xs w-auto h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id='firstname' placeholder={info.firstname} name='firstname' onChange={(e) => updateFirstname(e.target.value)}/>
+          <input type='text' className='ml-2 mr-2 bg-gray-50 border text-gray-800 text-xs w-auto h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id='firstname' placeholder={htmlEntities(info.firstname)} name='firstname' onChange={(e) => updateFirstname(e.target.value)}/>
           <label htmlFor='lastname' className='mt-4 ml-2 uppercase text-sm font-medium text-red-600'>Lastname</label>
-          <input type='text' className='ml-2 mr-2 bg-gray-50 border text-gray-800 text-xs w-auto h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id='lastname' placeholder={info.lastname} name='lastname' onChange={(e) => updateLastname(e.target.value)} />
+          <input type='text' className='ml-2 mr-2 bg-gray-50 border text-gray-800 text-xs w-auto h-10 p-2 rounded focus:outline-none focus:bg-gray-100' id='lastname' placeholder={htmlEntities(info.lastname)} name='lastname' onChange={(e) => updateLastname(e.target.value)} />
           <label htmlFor='email' className='mt-4 ml-2 uppercase flex items-center text-sm font-medium text-red-600'>Email <p className='ml-2 text-xs text-red-600 italic lowercase'>Contact administrator to change your email</p></label>
           <input type='email' className='ml-2 mr-2 bg-gray-200 border text-gray-800 text-xs w-auto h-10 p-2 rounded focus:outline-none' id='email' name='email' value={info.email} readOnly/>
           <div className="flex flex-col md:flex-row md:flex-row-reverse items-center mt-4">

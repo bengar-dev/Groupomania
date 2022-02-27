@@ -153,27 +153,30 @@ function PostsContent() {
           })
           function handleNewpost() {
             if(!msgVal && !imgPrev && !msg) {
-              updateAlert(`Warning, a publication can't be empty`)
+              window.alert(`Warning, a publication can't be empty`)
               return false
             }
             else {
               updatePosts(newPost)
             }
           }
+
+
+
           // affichage du Edit Post
           return ( <div className='flex flex-col bg-slate-50 dark:bg-slate-800 items-center p-4'>
             {imgPrev ? <div><img className='w-auto h-60 object-cover rounded-lg shadow' src={imgPrev} alt='image post' /><button className='relative bottom-60 w-full bg-red-600/40 hover:bg-red-600 rounded-lg text-white p-1' onClick={(e) => e.preventDefault(updateImgPrev(null))}><i className="fas fa-trash" aria-hidden="true"></i></button>
             </div> : ''}
             <label htmlFor='edit-img' className='w-9/12 p-1 md:p-0 md:w-3/12 bg-orange-200 border border-orange-600 hover:bg-orange-600 rounded-lg text-orange-600 hover:text-white text-center flex items-center justify-around' aria-hidden="true"><i className="fas fa-images"></i> <p className='font-medium text-sm'>Edit image</p>
             <input type='file' className='w-0' id='edit-img' accept='images/*' onChange={(e) => changeFile(e)}/></label>
-          <textarea className='w-full mt-2 resize-none h-40 text-xs p-2 focus:outline-none rounded-lg border dark:bg-slate-600 dark:text-white' id={textId} value={msgVal ? msgVal : ''} placeholder={msg} onChange={(e) => updateMsgVal(e.target.value)}></textarea>
+          <textarea className='w-full mt-2 resize-none h-40 text-xs p-2 focus:outline-none rounded-lg border dark:bg-slate-600 dark:text-white' id={textId} value={msgVal} placeholder={msg} onChange={(e) => updateMsgVal(e.target.value)}></textarea>
           <button className='mt-2 p-2 bg-emerald-100 border border-emerald-400 w-full text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(editPost(textId, postid, imgPrev, imgVal, msgVal, msg), updateEditPost(0), handleNewpost(), updateMsgVal(''), updateImgPrev(''))}><i className="fas fa-paper-plane" aria-hidden="true"></i></button>
           </div>
         )
       } // si on appelle pas edit, on retourne simplement le msg du post
       return (
         <div className='flex flex-col mb-2'>
-           {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg' src={img} alt={'image publication ' + postid}/></div> : ''}
+           {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg object-cover md:object-none' src={img} alt={'image publication ' + postid}/></div> : ''}
            <p className='bg-slate-50 p-4 text-gray-800 font-light text-sm rounded dark:bg-slate-600 dark:text-gray-200'>{htmlEntities(msg)}</p>
         </div>
       )
@@ -294,7 +297,7 @@ function PostsContent() {
            <div className='flex w-full items-center p-1'>
              <img className='h-10 w-10 object-cover rounded-full' src={post.userId === userToken.userId ? (avatarPreview === '' ? post.avatar : avatarPreview) : post.avatar} alt={'avatar ' + post.firstname}/>
              <div className='flex flex-col ml-2'>
-             <button className='ml-0 mr-auto font-medium dark:text-white' onClick={(e) => e.preventDefault(navigate('/user-profil/' + post.userId))}>{post.userId === userToken.userId ? (firstname === '' ? post.firstname : firstname) : post.firstname} {post.userId === userToken.userId ? (lastname === '' ? post.lastname : lastname) : post.lastname}</button>
+             <button className='ml-0 mr-auto font-medium dark:text-white' onClick={(e) => e.preventDefault(navigate('/user-profil/' + post.userId))}>{post.userId === userToken.userId ? (firstname === '' ? htmlEntities(post.firstname) : firstname) : htmlEntities(post.firstname)} {post.userId === userToken.userId ? (lastname === '' ? htmlEntities(post.lastname) : lastname) : htmlEntities(post.lastname)}</button>
              <p className='text-xs dark:text-white'>{moment(post.postedat).format('LLL')}</p>
              </div>
              {postActions(post.userId, post.postId, post.msg, post.img)}
@@ -315,7 +318,7 @@ function PostsContent() {
                   <div className='flex p-2 bg-slate-50 dark:bg-slate-600'>
                     <img className='h-8 w-8 rounded-full object-cover' src={cmt.userId === userToken.userId ? (avatarPreview === '' ? cmt.avatar : avatarPreview) : cmt.avatar} alt={'avatar ' + cmt.firstname} />
                     <div className='ml-2 flex flex-col'>
-                      <button className='ml-0 mr-auto text-sm font-medium' onClick={(e) => e.preventDefault(navigate('/user-profil/' + cmt.userId))}>{cmt.userId === userToken.userId ? (firstname === '' ? cmt.firstname : firstname) : cmt.firstname} {cmt.userId === userToken.userId ? (lastname === '' ? cmt.lastname : lastname) : cmt.lastname}</button>
+                      <button className='ml-0 mr-auto text-sm font-medium' onClick={(e) => e.preventDefault(navigate('/user-profil/' + cmt.userId))}>{cmt.userId === userToken.userId ? (firstname === '' ? htmlEntities(cmt.firstname) : firstname) : htmlEntities(cmt.firstname)} {cmt.userId === userToken.userId ? (lastname === '' ? htmlEntities(cmt.lastname) : lastname) : htmlEntities(cmt.lastname)}</button>
                       <p className='text-xs'>{moment(cmt.cmtdate).calendar()}</p>
                     </div>
                     {cmtActions(userToken.userId, cmt.userId, cmt.cmtId)}
