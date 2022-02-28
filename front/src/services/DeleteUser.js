@@ -7,11 +7,12 @@ export function deleteUser(pass){
       password: pass
   }
 
-  return axios.delete(api + '/api/user/' + userInfo.userId, { data }, {
-    headers: {'Authorization' : 'Bearer ' + userInfo.token}
+  return axios.delete(api + '/api/user/' + userInfo.userId, {
+    headers: {'Authorization' : 'Bearer ' + userInfo.token},
+    data: {password: pass}
   })
     .then(function (response){
-      return true 
+      return true
     })
     .catch(function (error){
       return false

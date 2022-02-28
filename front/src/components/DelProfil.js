@@ -57,8 +57,8 @@ function DelProfil() {
         <form encType='multipart/form-data' className='flex flex-col items-center'>
           <p className='text-center font-medium text-red-600' id='alert-del'><i className="fas fa-exclamation-triangle mr-2"></i>Warning, this action is irreversible</p>
           <p className='w-9/12 text-center text-xs text-red-600' id='alert-del-desc'>All of your data will be lost, if you are sure to delete your accout, please confirm your password.</p>
-          <label htmlFor='passconfirm_del' className='mt-6 w-full ml-0 text-sm font-medium'>Confirm your password</label>
           <input type='text' name='username' autoComplete='username' className='hidden' />
+          <label htmlFor='passconfirm_del' className='mt-6 w-full ml-0 text-sm font-medium'>Confirm your password</label>
           <input className='mt-2 w-full bg-gray-50 border text-gray-800 text-xs h-10 p-2 rounded focus:outline-none focus:bg-gray-100' type='password' id='passconfirm_del' name='passconfirm_del' value={pass} autoComplete='new-password' onChange={(e) => updatePass(e.target.value)}/>
           <div className="w-full flex flex-col md:flex-row-reverse">
             <button aria-label="Delete my Account" title="Delete my Account" type='button' type='submit' className='mr-auto ml-auto mt-2 md:ml-0 md:mr-0 md:mt-2 p-2 bg-emerald-100 border border-emerald-400 w-full md:w-20 text-center rounded text-emerald-700 hover:bg-emerald-400 hover:text-white' onClick={(e) => e.preventDefault(repDel(pass))}><i className='fas fa-check' /></button>
