@@ -2,6 +2,30 @@
 
 Final project before graduate, this is about a social network of Groupomania enterprise. *( MVP version )*
 
+# Installation ( FR )
+
+**Installation de la bdd SQL**
+
+1. Importer le fichier SQL `groupo_sql.sql`
+
+**Installation back-end**
+
+1. Se placer directement dans le dossier back de notre application via la commande : `cd back`
+
+2. Executer l'installation des dépendences : `npm install`
+
+3. Lancer notre server back-end via la commande : `node server`
+
+**Installation front-end**
+
+1. Se placer dans le dossier front de notre application via la commande : `cd front`
+
+2. Executer l'installation des dépendences : `npm install`
+
+3. Lancer notre application via la commande : `npm run start`
+
+**Profitez du résau social Groupomania !**
+
 # Rules
 
 JavaScript must be use, front-end side we have to choose a framework & back-end side we have to use SQL Databases.

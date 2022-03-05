@@ -70,8 +70,8 @@ function Header() {
       <header className='bg-gray-400 dark:bg-gray-600 w-full h-14 flex justify-around items-center shadow-lg'>
       <button><img className='h-10' src={Logo} alt='Groupomania Logo' onClick={(e) => e.preventDefault(updateUsers([]), navigate('/'))}/></button>
       {user.map(info =>
-      <div className='flex items-center' key={info.id}>
-        <div className='flex items-center'>
+      <div className='flex items-center justify-around' key={info.id}>
+        <div className='flex items-center ml-10'>
           <button className={darkClass} onClick={(e) => e.preventDefault(handleDark(localSetting))}>{handleButton()}<p className='hidden'>dark mode</p></button>
           <div className='bg-white h-6 w-14 mr-20 rounded-full'></div>
         </div>

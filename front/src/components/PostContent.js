@@ -176,7 +176,7 @@ function PostsContent() {
       } // si on appelle pas edit, on retourne simplement le msg du post
       return (
         <div className='flex flex-col mb-2'>
-           {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg object-cover md:object-none' src={img} alt={'image publication ' + postid}/></div> : ''}
+           {img ? <div className='p-4 flex justify-center'><img className='w-auto h-60 rounded-lg shadow-lg object-cover' src={img} alt={'image publication ' + postid}/></div> : ''}
            <p className='bg-slate-50 p-4 text-gray-800 font-light text-sm rounded dark:bg-slate-600 dark:text-gray-200'>{htmlEntities(msg)}</p>
         </div>
       )
