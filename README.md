@@ -4,9 +4,17 @@ Final project before graduate, this is about a social network of Groupomania ent
 
 # Installation ( FR )
 
+**Installation du projet GitHub**
+
+1. Executer la commande Git `git clone https://github.com/benysserp/Groupomania.git Groupomania`
+
+2. Placer vous maintenant dans le dossier du projet via `cd Groupomania`
+
 **Installation de la bdd SQL**
 
-1. Importer le fichier SQL `groupo_sql.sql`
+1. Créer une base de donnée `groupo_sql`
+
+2. Importer le fichier SQL dans cette base de donnée `groupo_sql.sql`
 
 **Installation back-end**
 
