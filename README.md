@@ -24,6 +24,8 @@ Final project before graduate, this is about a social network of Groupomania ent
 
 3. Lancer notre server back-end via la commande : `node server`
 
+4. Créer d'un dossier `images` dans notre back-end
+
 **Installation front-end**
 
 1. Se placer dans le dossier front de notre application via la commande : `cd front`
